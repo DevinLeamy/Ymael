@@ -4,7 +4,7 @@
 
 #include "math/vec4.h"
 
-vec4::vec4(double x, double y, double z, double w): x{x}, y{y}, z{z}, w{w} {}
+vec4::vec4(float x, float y, float z, float w): x{x}, y{y}, z{z}, w{w} {}
 
 vec4::vec4(const vec4& other): x{other.x}, y{other.y}, z{other.z}, w{other.w} {}
 
@@ -18,7 +18,7 @@ vec4& vec4::operator=(const vec4& other) {
 }
 
 vec4& vec4::normalize() {
-  double len = length();
+  float len = length();
   x /= len;
   y /= len;
   z /= len;
@@ -27,7 +27,7 @@ vec4& vec4::normalize() {
   return *this;
 }
 
-vec4& vec4::scale(double s) {
+vec4& vec4::scale(float s) {
   x *= s;
   y *= s;
   z *= s;
@@ -45,7 +45,7 @@ std::ostream& operator<<(std::ostream &os, const vec4& vec) {
   return os;
 }
 
-double vec4::length() const {
+float vec4::length() const {
   return sqrt(x * x + y * y + z * z + w * w);
 }
 
@@ -57,33 +57,33 @@ vec4 vec4::sub(const vec4& left, const vec4& right) {
   return left - right;
 }
 
-vec4 vec4::lerp(const vec4& start, const vec4& end, double t) {
+vec4 vec4::lerp(const vec4& start, const vec4& end, float t) {
   vec4 diff = end - start;
 
   return start + diff * t;
 }
 
-double vec4::dot(const vec4& left, const vec4& right) {
+float vec4::dot(const vec4& left, const vec4& right) {
   return left.x * right.x + left.y * right.y + left.z * right.z + left.w * right.w;
 }
 
-double vec4::angle(const vec4& left, const vec4& right) {
-  double cosA = dot(left, right) / (left.length() * right.length());
+float vec4::angle(const vec4& left, const vec4& right) {
+  float cosA = dot(left, right) / (left.length() * right.length());
   return acos(cosA);
 }
 
-double vec4::dist(const vec4& left, const vec4& right) {
-  double dx = right.x - left.x;
-  double dy = right.y - left.y;
-  double dz = right.z - left.z;
-  double dw = right.w - left.w;
+float vec4::dist(const vec4& left, const vec4& right) {
+  float dx = right.x - left.x;
+  float dy = right.y - left.y;
+  float dz = right.z - left.z;
+  float dw = right.w - left.w;
 
 
   return sqrt(dx * dx + dy * dy + dz * dz + dw * dw);
 }
 
 vec4 vec4::getNormalized(const vec4 &vec) {
-  double len = vec.length();
+  float len = vec.length();
 
   vec4 res;
   res.x = vec.x / len;
@@ -134,7 +134,7 @@ vec4 vec4::operator-(const vec4& right) const {
   return res;
 }
 
-vec4 vec4::operator*(double s) const {
+vec4 vec4::operator*(float s) const {
   vec4 res;
   res.x = x * s;
   res.y = y * s;

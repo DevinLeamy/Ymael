@@ -5,9 +5,9 @@
 
 class vec3 {
 public:
-  double x, y, z;
+  float x, y, z;
 
-  vec3(double x = 0, double y = 0, double z = 0);
+  vec3(float x = 0, float y = 0, float z = 0);
 
   vec3(const vec3& other);
 
@@ -19,10 +19,10 @@ public:
 
   // create vector of magnitude 1 
   vec3 &normalize();
-  vec3 &scale(double s);
+  vec3 &scale(float s);
 
   // magnitude
-  double length() const;
+  float length() const;
 
   static vec3 add(const vec3& left, const vec3& right);
   static vec3 sub(const vec3& left, const vec3& right);
@@ -31,16 +31,16 @@ public:
   static vec3 cross(const vec3& left, const vec3& right);
 
   // linear interpolation 
-  static vec3 lerp(const vec3& start, const vec3& end, double t);
+  static vec3 lerp(const vec3& start, const vec3& end, float t);
 
   // dot product: "similarily" of two vectors
-  static double dot(const vec3& left, const vec3& right);
+  static float dot(const vec3& left, const vec3& right);
 
   // angle between two vectors
-  static double angle(const vec3& left, const vec3& right);
+  static float angle(const vec3& left, const vec3& right);
 
   // distance between two vector end points
-  static double dist(const vec3& left, const vec3& right);
+  static float dist(const vec3& left, const vec3& right);
 
   static vec3 getNormalized(const vec3 &v);
 
@@ -51,7 +51,7 @@ public:
   vec3 operator+(const vec3& right) const;
   vec3 operator-(const vec3& right) const;
 
-  vec3 operator*(double s) const;
+  vec3 operator*(float s) const;
 };
 
 #endif

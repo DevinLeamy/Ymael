@@ -4,7 +4,7 @@
 
 #include "math/vec3.h"
 
-vec3::vec3(double x, double y, double z): x{x}, y{y}, z{z} {}
+vec3::vec3(float x, float y, float z): x{x}, y{y}, z{z} {}
 
 vec3::vec3(const vec3& other): x{other.x}, y{other.y}, z{other.z} {}
 
@@ -17,7 +17,7 @@ vec3& vec3::operator=(const vec3& other) {
 }
 
 vec3& vec3::normalize() {
-  double len = length();
+  float len = length();
   x /= len;
   y /= len;
   z /= len;
@@ -25,7 +25,7 @@ vec3& vec3::normalize() {
   return *this;
 }
 
-vec3& vec3::scale(double s) {
+vec3& vec3::scale(float s) {
   x *= s;
   y *= s;
   z *= s;
@@ -38,7 +38,7 @@ std::ostream& operator<<(std::ostream &os, const vec3& vec) {
   return os;
 }
 
-double vec3::length() const {
+float vec3::length() const {
   return sqrt(x * x + y * y + z * z);
 }
 
@@ -50,24 +50,24 @@ vec3 vec3::sub(const vec3& left, const vec3& right) {
   return left - right;
 }
 
-vec3 vec3::lerp(const vec3& start, const vec3& end, double t) {
+vec3 vec3::lerp(const vec3& start, const vec3& end, float t) {
   vec3 diff = end - start;
   return start + diff * t;
 }
 
-double vec3::dot(const vec3& left, const vec3& right) {
+float vec3::dot(const vec3& left, const vec3& right) {
   return left.x * right.x + left.y * right.y + left.z * right.z;
 }
 
-double vec3::angle(const vec3& left, const vec3& right) {
-  double cosA = dot(left, right) / (left.length() * right.length());
+float vec3::angle(const vec3& left, const vec3& right) {
+  float cosA = dot(left, right) / (left.length() * right.length());
   return acos(cosA);
 }
 
-double vec3::dist(const vec3& left, const vec3& right) {
-  double dx = right.x - left.x;
-  double dy = right.y - left.y;
-  double dz = right.z - left.z;
+float vec3::dist(const vec3& left, const vec3& right) {
+  float dx = right.x - left.x;
+  float dy = right.y - left.y;
+  float dz = right.z - left.z;
 
   return sqrt(dx * dx + dy * dy + dz * dz);
 }
@@ -87,7 +87,7 @@ vec3 vec3::cross(const vec3& left, const vec3& right) {
 }
 
 vec3 vec3::getNormalized(const vec3 &vec) {
-  double len = vec.length();
+  float len = vec.length();
 
   vec3 res;
   res.x = vec.x / len;
@@ -133,7 +133,7 @@ vec3 vec3::operator-(const vec3& right) const {
   return res;
 }
 
-vec3 vec3::operator*(double s) const {
+vec3 vec3::operator*(float s) const {
   vec3 res;
   res.x = x * s;
   res.y = y * s;

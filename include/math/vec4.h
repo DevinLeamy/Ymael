@@ -4,9 +4,9 @@
 
 class vec4 {
 public:
-  double x, y, z, w;
+  float x, y, z, w;
 
-  vec4(double x = 0, double y = 0, double z = 0, double w = 0);
+  vec4(float x = 0, float y = 0, float z = 0, float w = 0);
 
   vec4(const vec4& other);
 
@@ -18,25 +18,25 @@ public:
 
   // create vector of magnitude 1 
   vec4 &normalize();
-  vec4 &scale(double s);
+  vec4 &scale(float s);
 
   // magnitude
-  double length() const;
+  float length() const;
 
   static vec4 add(const vec4& left, const vec4& right);
   static vec4 sub(const vec4& left, const vec4& right);
 
   // linear interpolation 
-  static vec4 lerp(const vec4& start, const vec4& end, double t);
+  static vec4 lerp(const vec4& start, const vec4& end, float t);
 
   // dot product: "similarily" of two vectors
-  static double dot(const vec4& left, const vec4& right);
+  static float dot(const vec4& left, const vec4& right);
 
   // angle between two vectors
-  static double angle(const vec4& left, const vec4& right);
+  static float angle(const vec4& left, const vec4& right);
 
   // distance between two vector end points
-  static double dist(const vec4& left, const vec4& right);
+  static float dist(const vec4& left, const vec4& right);
 
   static vec4 getNormalized(const vec4 &v);
 
@@ -46,5 +46,5 @@ public:
   vec4 operator+(const vec4& right) const;
   vec4 operator-(const vec4& right) const;
 
-  vec4 operator*(double s) const;
+  vec4 operator*(float s) const;
 };

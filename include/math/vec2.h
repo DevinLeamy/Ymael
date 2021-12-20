@@ -5,9 +5,9 @@
 
 class vec2 {
 public:
-  double x, y;
+  float x, y;
 
-  vec2(double x = 0, double y = 0);
+  vec2(float x = 0, float y = 0);
 
   vec2(const vec2& other);
   vec2(vec2&& other);
@@ -19,17 +19,17 @@ public:
   ~vec2() = default;
 
   vec2 &normalize();
-  vec2 &scale(double s);
+  vec2 &scale(float s);
 
-  double length() const;
+  float length() const;
 
   static vec2 add(const vec2& left, const vec2& right);
   static vec2 sub(const vec2& left, const vec2& right);
-  static vec2 lerp(const vec2& start, const vec2& end, double t);
+  static vec2 lerp(const vec2& start, const vec2& end, float t);
 
-  static double dot(const vec2& left, const vec2& right);
-  static double angle(const vec2& left, const vec2& right);
-  static double dist(const vec2& left, const vec2& right);
+  static float dot(const vec2& left, const vec2& right);
+  static float angle(const vec2& left, const vec2& right);
+  static float dist(const vec2& left, const vec2& right);
 
   static vec2 getNormalized(const vec2 &v);
 
@@ -40,7 +40,7 @@ public:
   vec2 operator+(const vec2& right) const;
   vec2 operator-(const vec2& right) const;
 
-  vec2 operator*(double s) const;
+  vec2 operator*(float s) const;
 };
 
 #endif

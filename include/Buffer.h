@@ -48,7 +48,7 @@ Operations:
 */
 
 class Buffer {
-  Buffer(std::vector<double> data, std::vector<double> indices);
+  Buffer(std::vector<float> data, std::vector<float> indices);
 
   void bind(vec3& vec) {
     indices[iIndex] = index;
@@ -72,8 +72,8 @@ class Buffer {
 private:
   size_t dIndex = 0;            // current vertex
   size_t iIndex = 0; 
-  std::vector<double> data;    // raw data
-  std::vector<double> indices; // vertex indices
+  std::vector<float> data;    // raw data
+  std::vector<float> indices; // vertex indices
   
 };
 
