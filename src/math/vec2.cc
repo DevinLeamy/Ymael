@@ -105,8 +105,8 @@ vec2 vec2::operator+(const vec2& right) const {
 
 vec2 vec2::operator-(const vec2& right) const {
   vec2 res;
-  res.x = x + right.x;
-  res.y = y + right.y;
+  res.x = x - right.x;
+  res.y = y - right.y;
 
   return res;
 }

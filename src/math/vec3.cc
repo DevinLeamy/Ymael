@@ -56,7 +56,7 @@ vec3 vec3::lerp(const vec3& start, const vec3& end, double t) {
 }
 
 double vec3::dot(const vec3& left, const vec3& right) {
-  return left.x * right.x + left.y * right.y + left.y * right.y;
+  return left.x * right.x + left.y * right.y + left.z * right.z;
 }
 
 double vec3::angle(const vec3& left, const vec3& right) {
@@ -67,8 +67,9 @@ double vec3::angle(const vec3& left, const vec3& right) {
 double vec3::dist(const vec3& left, const vec3& right) {
   double dx = right.x - left.x;
   double dy = right.y - left.y;
+  double dz = right.z - left.z;
 
-  return sqrt(dx * dx + dy * dy);
+  return sqrt(dx * dx + dy * dy + dz * dz);
 }
 
 /*
@@ -125,9 +126,9 @@ vec3 vec3::operator+(const vec3& right) const {
 
 vec3 vec3::operator-(const vec3& right) const {
   vec3 res;
-  res.x = x + right.x;
-  res.y = y + right.y;
-  res.z = z + right.z;
+  res.x = x - right.x;
+  res.y = y - right.y;
+  res.z = z - right.z;
 
   return res;
 }
