@@ -6,7 +6,7 @@
 
 vec4::vec4(double x, double y, double z, double w): x{x}, y{y}, z{z}, w{w} {}
 
-vec4::vec4(const vec4& other): x{other.x}, y{other.y}, z{other.y}, w{other.w} {}
+vec4::vec4(const vec4& other): x{other.x}, y{other.y}, z{other.z}, w{other.w} {}
 
 vec4& vec4::operator=(const vec4& other) {
   x = other.x;

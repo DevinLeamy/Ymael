@@ -2,8 +2,7 @@ CC = g++
 CCFLAGS = -std=c++2a -Wall -MMD
 
 SOURCE = src
-INC = -I include 
-LIB = lib
+INC = -I include -I lib 
 BIN = bin
 EXEC = main
 

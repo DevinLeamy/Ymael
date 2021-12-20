@@ -6,7 +6,7 @@
 
 vec3::vec3(double x, double y, double z): x{x}, y{y}, z{z} {}
 
-vec3::vec3(const vec3& other): x{other.x}, y{other.y}, z{other.y} {}
+vec3::vec3(const vec3& other): x{other.x}, y{other.y}, z{other.z} {}
 
 vec3& vec3::operator=(const vec3& other) {
   x = other.x;
