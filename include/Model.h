@@ -9,7 +9,7 @@ using std::vector;
 
 class Model {
 public:
-  Model(vector<vec3> vertices, vector<vec2> uvs, vector<vec3> normals, vector<vector<vector<int>>> indices);
+  Model(vector<vec3> vertices, vector<vec2> uvs, vector<vec3> normals, vector<vector<int>> indices);
 
   const vector<vec3> &getVertices() const;
   const vector<vec2> &getUVs() const;
@@ -20,5 +20,5 @@ private:
   vector<vec3> vertices; // positions
   vector<vec2> uvs;      // texture coords
   vector<vec3> normals;  // vertex normals
-  vector<vector<vector<int>>> indices; // indices
+  vector<vector<int>> indices; // indices
 };

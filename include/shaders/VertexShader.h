@@ -1,6 +1,4 @@
-#ifndef __VERTEX_SHADER_H__
-#define __VERTEX_SHADER_H__
-
+#pragma once
 /*
 (vertex input)
 VERTEX SHADER
@@ -16,11 +14,11 @@ Notes:
 
 */
 
-class VertexShader {
+#include "shaders/Shader.h"
+
+class VertexShader: public Shader {
   // Model matrix
   // View matrix
   // Projection matrix
   // Viewport mapping (transformation)
 };
-
-#endif

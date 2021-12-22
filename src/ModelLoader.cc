@@ -80,7 +80,7 @@ std::unique_ptr<Model> loadModel(std::string modelPath) {
   std::vector<vec3> vertices; // positions
   std::vector<vec2> uvs;      // texture coords
   std::vector<vec3> normals;  // vertex normals
-  std::vector<std::vector<std::vector<int>>> indices; // indices
+  std::vector<std::vector<int>> indices; // indices
 
   std::ifstream modelFile(modelPath.data());
 
@@ -104,7 +104,7 @@ std::unique_ptr<Model> loadModel(std::string modelPath) {
     else if (type == "vn")
       normals.push_back(getNormal(lineStream));
     else if (type == "f")
-      indices.push_back(getFaceIndices(lineStream));
+      indices.emplace_back(getFaceIndices(lineStream));
   }
 
   return std::make_unique<Model>(vertices, uvs, normals, indices);

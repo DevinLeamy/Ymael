@@ -6,7 +6,7 @@
 
 using std::vector;
 
-Model::Model(vector<vec3> vertices, vector<vec2> uvs, vector<vec3> normals, vector<vector<vector<int>>> indices):
+Model::Model(vector<vec3> vertices, vector<vec2> uvs, vector<vec3> normals, vector<vector<int>> indices):
   vertices{vertices}, uvs{uvs}, normals{normals}, indices{indices} 
 {}
 
