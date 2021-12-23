@@ -13,6 +13,7 @@ public:
   vec2(vec2&& other);
 
   vec2 &operator=(const vec2& other);
+  float& operator[](int index);
 
   friend std::ostream& operator<<(std::ostream& os, const vec2& vec); 
   

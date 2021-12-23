@@ -11,10 +11,10 @@ class Model {
 public:
   Model(vector<vec3> vertices, vector<vec2> uvs, vector<vec3> normals, vector<vector<int>> indices);
 
-  const vector<vec3> &getVertices() const;
-  const vector<vec2> &getUVs() const;
-  const vector<vec3> &getNormals() const;
-  // vector<vec3> getVertices() const;
+  const vector<vec3>& getVertices() const;
+  const vector<vec2>& getUVs() const;
+  const vector<vec3>& getNormals() const;
+  const vector<vector<int>>& getIndices() const;
 
 private:
   vector<vec3> vertices; // positions

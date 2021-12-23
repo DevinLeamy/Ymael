@@ -1,6 +1,7 @@
 #include <memory>
 #include <cmath>
 #include <iostream>
+#include <cassert>
 
 #include "math/vec2.h"
 
@@ -34,6 +35,13 @@ vec2& vec2::scale(float s) {
 std::ostream& operator<<(std::ostream &os, const vec2& vec) {
   os << "(vec2) x: " << vec.x << ", y: " << vec.y << std::endl;
   return os;
+}
+
+float& vec2::operator[](int index) {
+  if (index == 0) return x;
+  else if (index == 1) return y;
+
+  assert(false && "Invalid index access");
 }
 
 float vec2::length() const {

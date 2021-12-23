@@ -15,3 +15,5 @@ const vector<vec3>& Model::getVertices() const { return vertices; }
 const vector<vec2>& Model::getUVs() const { return uvs; }
 
 const vector<vec3>& Model::getNormals() const { return normals; }
+
+const vector<vector<int>>& Model::getIndices() const { return indices; }

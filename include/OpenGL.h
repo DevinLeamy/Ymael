@@ -10,20 +10,20 @@ OpenGL simulator;
 #include "ShaderProgram.h"
 
 class OpenGL {
+public:
   OpenGL() = default; 
   ~OpenGL() = default;
 
-public:
-  void bind(std::shared_ptr<VertexArrayObject> vao);
-  void bind(std::shared_ptr<ShaderProgram> sProgram);
+  void bind(VertexArrayObject* vao);
+  void bind(ShaderProgram* sProgram);
   void bind(std::vector<std::vector<int>>& indices);
 
   void draw(int triangleCnt, bool withIndices = true);
 
 private:
   std::vector<std::vector<int>>& indices;
-  std::shared_ptr<VertexArrayObject> vao;
-  std::shared_ptr<ShaderProgram> sProgram; 
+  VertexArrayObject* vao;
+  ShaderProgram* sProgram; 
 };
 
 extern const std::unique_ptr<OpenGL> GL;

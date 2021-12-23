@@ -6,5 +6,6 @@ and creates fragments.
 
 */
 class Rasterizer {
-
+public:
+  void rasterize(VertexArrayObject *vertexData, int vertices);
 };

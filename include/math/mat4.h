@@ -12,9 +12,9 @@ class mat4 {
 
     vec4 operator*(const vec4 &right) const; 
 
-    static mat4 scale(float x, float y, float z);
-    static mat4 translate(float x, float y, float z);
-    static mat4 identity();
+    static mat4 scaleMat(float x, float y, float z);
+    static mat4 translationMat(float x, float y, float z);
+    static mat4 identityMat();
 };
 
 /*

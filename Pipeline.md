@@ -1,6 +1,5 @@
 # Renderer 
 
-
 ### Step 1: Create Model 
 1. Create data for a model, perhaps from blender. 
 
@@ -36,4 +35,7 @@
   3. Fragment shader is executed.
   4. Fragments are drawn to the screen.
 
+
+### OpenGL render pipeline
+[ ] 
 

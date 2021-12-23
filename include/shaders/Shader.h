@@ -6,6 +6,9 @@
 #include "VertexArrayObject.h"
 
 class Shader {
-  void run(const VertexArrayObject& inStream, const VertexArrayObject& outStream, vector<int> attrIndices);
-  void run(const VertexArrayObject& inStream, const VertexArrayObject& outStream, int vertexIndex);
+public:
+  Shader() = default;
+  virtual ~Shader() = default;
+  virtual void run(VertexArrayObject* inStream, VertexArrayObject* outStream, std::vector<int> attrIndices);
+  virtual void run(VertexArrayObject* inStream, VertexArrayObject* outStream, int vertexIndex);
 };

@@ -1,6 +1,7 @@
 #include <memory>
 #include <cmath>
 #include <iostream>
+#include <cassert>
 
 #include "math/vec3.h"
 
@@ -36,6 +37,14 @@ vec3& vec3::scale(float s) {
 std::ostream& operator<<(std::ostream &os, const vec3& vec) {
   os << "(vec3) x: " << vec.x << ", y: " << vec.y << ", z: " << vec.z << std::endl;
   return os;
+}
+
+float& vec3::operator[](int index) {
+  if (index == 0) return x;
+  else if (index == 1) return y;
+  else if (index == 2) return z;
+
+  assert(false && "Invalid index access");
 }
 
 float vec3::length() const {

@@ -10,10 +10,16 @@ void ShaderProgram::bind(std::shared_ptr<FragmentShader> fs) {
   this->fs = fs;
 }
 
-void ShaderProgram::run(const VertexArrayObject &inStream, int vertexCount) {
+void ShaderProgram::run(VertexArrayObject *inStream, int vertexCount) {
+  std::unique_ptr<VertexArrayObject> vsOutStream = std::make_unique<VertexArrayObject>();
+
+  for (size_t i = 0; i < vertexCount; ++i)
+    vs->run(inStream, vsOutStream.get(), i);
+  
+  // Run the rasterizer to create a VAO with fragment data
 
 }
 
-void ShaderProgram::run(const VertexArrayObject &inStream, std::vector<std::vector<int>> indices) {
+void ShaderProgram::run(VertexArrayObject *inStream, const std::vector<std::vector<int>>& indices) {
 
 }

@@ -12,6 +12,7 @@ public:
   vec3(const vec3& other);
 
   vec3 &operator=(const vec3& other);
+  float& operator[](int index);
 
   friend std::ostream& operator<<(std::ostream& os, const vec3& vec); 
   

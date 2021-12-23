@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include "math/vec3.h"
+
 
 /*
 Used to create a vertex specification.
@@ -50,28 +52,14 @@ Operations:
 class Buffer {
   Buffer(std::vector<float> data, std::vector<float> indices);
 
-  void bind(vec3& vec) {
-    indices[iIndex] = index;
-    data[index++] = vec.x;
-    data[index++] = vec.y;
-    data[index++] = vec.z;
-  }
+  void bind(vec3& vec); 
 
-  void get(size_t index, vec3& res) const {
-    res.x = data[indices[index]]; 
-    res.y = data[indices[index] + 1]; 
-    res.z = data[indices[index] + 2]; 
-  }
-
-  void set(size_t index, ve3& vec) {
-    data[indices[index]] = vec.x;
-    data[indices[index] + 1] = vec.y;
-    data[indices[index] + 2] = vec.z;
-  }
+  void get(size_t index, vec3& res) const; 
+  void set(size_t index, vec3& vec); 
 
 private:
   size_t dIndex = 0;            // current vertex
-  size_t iIndex = 0; 
+  size_t iIndex = 0; // indicesIndex
   std::vector<float> data;    // raw data
   std::vector<float> indices; // vertex indices
   

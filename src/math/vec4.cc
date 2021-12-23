@@ -1,6 +1,7 @@
 #include <memory>
 #include <cmath>
 #include <iostream>
+#include <cassert>
 
 #include "math/vec4.h"
 
@@ -43,6 +44,24 @@ std::ostream& operator<<(std::ostream &os, const vec4& vec) {
   ", w: " << vec.w << std::endl;
 
   return os;
+}
+
+float& vec4::operator[](int index) {
+  if (index == 0) return x;
+  else if (index == 1) return y;
+  else if (index == 2) return z;
+  else if (index == 3) return w;
+
+  assert(false && "Invalid index access");
+}
+
+const float& vec4::operator[](int index) const {
+  if (index == 0) return x;
+  else if (index == 1) return y;
+  else if (index == 2) return z;
+  else if (index == 3) return w;
+
+  assert(false && "Invalid index access");
 }
 
 float vec4::length() const {

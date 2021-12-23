@@ -11,6 +11,8 @@ public:
   vec4(const vec4& other);
 
   vec4 &operator=(const vec4& other);
+  float& operator[](int index);
+  const float& operator[](int index) const;
 
   friend std::ostream& operator<<(std::ostream& os, const vec4& vec); 
   
