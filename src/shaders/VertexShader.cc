@@ -1,8 +1,8 @@
 #include "shaders/VertexShader.h"
 
 
-VertexShader::VertexShader(): modelMatrix{mat4::identity()}, viewMatrix{mat4::identity()}, 
-  projectionMatrix{mat4::identity()}
+VertexShader::VertexShader(): modelMatrix{mat4::identityM()}, viewMatrix{mat4::identityM()}, 
+  projectionMatrix{mat4::identityM()}
 {}
 
 void VertexShader::setUniform(MatrixType mt, mat4 matrix) {

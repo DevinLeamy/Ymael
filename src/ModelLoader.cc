@@ -76,7 +76,7 @@ vec3 getNormal(std::istringstream &lineStream) {
   return getVec3(lineStream);
 }
 
-std::unique_ptr<Model> loadModel(std::string modelPath) {
+Model* loadModel(std::string modelPath) {
   std::vector<vec3> vertices; // positions
   std::vector<vec2> uvs;      // texture coords
   std::vector<vec3> normals;  // vertex normals
@@ -84,28 +84,29 @@ std::unique_ptr<Model> loadModel(std::string modelPath) {
 
   std::ifstream modelFile(modelPath.data());
 
-  // if (!modelFile) {
-  //   std::cout << "Error: unable to read model file - " + modelPath;
-  //   exit(1);
-  // }
+  if (!modelFile) {
+    std::cout << "Error: unable to read model file - " + modelPath;
+    exit(1);
+  }
 
-  // std::string line, type;
+  std::string line, type;
 
-  // while (std::getline(modelFile, line)) {
-  //   std::cout << line << std::endl;
-  //   std::istringstream lineStream(line);
+  while (std::getline(modelFile, line)) {
+    std::istringstream lineStream(line);
 
-  //   lineStream >> type;
+    lineStream >> type;
 
-  //   if (type == "v")
-  //     vertices.push_back(getVertexPosition(lineStream));
-  //   else if (type == "vt")
-  //     uvs.push_back(getUV(lineStream));
-  //   else if (type == "vn")
-  //     normals.push_back(getNormal(lineStream));
-  //   else if (type == "f")
-  //     indices.emplace_back(getFaceIndices(lineStream));
-  // }
+    if (type == "v")
+      vertices.push_back(getVertexPosition(lineStream));
+    else if (type == "vt")
+      uvs.push_back(getUV(lineStream));
+    else if (type == "vn")
+      normals.push_back(getNormal(lineStream));
+    else if (type == "f") {
+      std::vector<std::vector<int>> faceIndices = getFaceIndices(lineStream);
+      indices.insert(indices.end(), faceIndices.begin(), faceIndices.end());
+    }
+  }
 
-  return std::make_unique<Model>(vertices, uvs, normals, indices);
+  return new Model {vertices, uvs, normals, indices };
 }

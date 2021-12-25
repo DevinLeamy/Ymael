@@ -1,5 +1,3 @@
-#pragma once
-
 #include <vector>
 #include <cassert>
 
@@ -19,6 +17,20 @@ Top left 3x3 - transformations
 Far right 3x1 - transformations
 Bottom row - (0, 0, 0, 1)
 */
+
+mat4& mat4::operator=(const mat4& other) {
+  for (size_t i = 0; i < 4; ++i)
+    for (size_t j = 0; j < 4; ++j)
+      m[i][j] = other.m[i][j];
+  
+  return *this;
+}
+
+mat4& mat4::operator=(mat4&& other) {
+  std::swap(m, other.m);
+
+  return *this;
+}
 
 
 mat4::mat4(std::vector<std::vector<float>> m) {
@@ -40,17 +52,17 @@ vec4 mat4::operator*(const vec4 &right) const {
 }
 
 // scaling matrix
-mat4 mat4::scaleMat(float x, float y, float z) {
+mat4 mat4::scaleM(float x, float y, float z) {
   return mat4({
     {x, 0, 0, 0},
     {0, y, 0, 0},
     {0, 0, z, 0},
     {0, 0, 0, 1}
-  })
+ });
 }
 
 // translation matrix
-mat4 translationMat(float x, float y, float z) {
+mat4 mat4::translationM(float x, float y, float z) {
   return mat4({
     {1, 0, 0, x},
     {0, 1, 0, y},
@@ -60,7 +72,7 @@ mat4 translationMat(float x, float y, float z) {
 }
 
 // identity matrix
-mat4 identityMat() {
+mat4 mat4::identityM() {
   return mat4({
     {1, 0, 0, 0},
     {0, 1, 0, 0},

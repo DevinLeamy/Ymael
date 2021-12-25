@@ -17,9 +17,11 @@ class mat4 {
 
     vec4 operator*(const vec4 &right) const; 
 
-    static mat4 scaleMat(float x, float y, float z);
-    static mat4 translationMat(float x, float y, float z);
-    static mat4 identityMat();
+    static mat4 scaleM(float x, float y, float z);
+    static mat4 translationM(float x, float y, float z);
+    static mat4 identityM();
+
+    ~mat4() = default;
 };
 
 /*

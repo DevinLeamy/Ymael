@@ -12,4 +12,4 @@ class ModelLoader {
   ModelLoader();
 };
 
-std::unique_ptr<Model> loadModel(std::string modelPath);
+Model* loadModel(std::string modelPath);

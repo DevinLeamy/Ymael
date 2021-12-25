@@ -9,7 +9,8 @@ using std::vector;
 
 class Model {
 public:
-  Model(vector<vec3> vertices, vector<vec2> uvs, vector<vec3> normals, vector<vector<int>> indices);
+  Model(const vector<vec3>& vertices, const vector<vec2>& uvs, 
+        const vector<vec3>& normals, const vector<vector<int>>& indices);
 
   const vector<vec3>& getVertices() const;
   const vector<vec2>& getUVs() const;
