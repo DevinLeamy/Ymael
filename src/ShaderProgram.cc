@@ -2,11 +2,11 @@
 
 #include "ShaderProgram.h"
 
-void ShaderProgram::bind(std::shared_ptr<VertexShader> vs) {
+void ShaderProgram::bind(VertexShader* vs) {
   this->vs = vs;
 }
 
-void ShaderProgram::bind(std::shared_ptr<FragmentShader> fs) {
+void ShaderProgram::bind(FragmentShader* fs) {
   this->fs = fs;
 }
 

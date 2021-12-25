@@ -11,7 +11,7 @@ void OpenGL::bind(ShaderProgram* sProgram) {
   this->sProgram = sProgram;
 }
 
-void OpenGL::bind(std::vector<std::vector<int>>& indices) {
+void OpenGL::bind(const std::vector<std::vector<int>>& indices) {
   this->indices = indices;
 }
 
@@ -23,4 +23,4 @@ void OpenGL::draw(int triangleCnt, bool withIndices) {
 }
 
 
-const std::unique_ptr<OpenGL> GL{};
+const std::unique_ptr<OpenGL> GL = std::make_unique<OpenGL>();

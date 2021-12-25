@@ -1,7 +1,42 @@
 #pragma once
 
 #include <vector>
-#include "math/vec3.h"
+#include "math/math.h"
+
+
+class Buffer {
+public:
+  Buffer(size_t floatCount, size_t size);
+  Buffer(std::vector<float> data, std::vector<int> indices);
+
+  void bind(vec2& vec);
+  void bind(vec3& vec); 
+
+  void get(size_t index, vec3& res) const; 
+  void set(size_t index, vec3& vec); 
+
+private:
+  size_t dIndex = 0;            // current vertex
+  size_t iIndex = 0; // indicesIndex
+  std::vector<float> data;    // raw data
+  std::vector<int> indices; // vertex indices
+};
+
+/*
+
+shaderCode(vector<std::shared_ptr<DataStream>> attributes, vector<std::shared_ptr<DataStream>> outputStream) {
+  vec3 pos;
+  color color;
+
+  attributes[0]->Get(pos);
+  attributes[1]->Get(color);
+
+  vec3 transformedPos = transformMatrix * pos;
+
+  outputStream[0]->Set()
+}
+
+*/
 
 
 /*
@@ -47,37 +82,5 @@ Operations:
     - data[indices[index]]   = value[0]
     - data[indices[index]+1] = value[1]
     - etc...
-*/
-
-class Buffer {
-  Buffer(std::vector<float> data, std::vector<float> indices);
-
-  void bind(vec3& vec); 
-
-  void get(size_t index, vec3& res) const; 
-  void set(size_t index, vec3& vec); 
-
-private:
-  size_t dIndex = 0;            // current vertex
-  size_t iIndex = 0; // indicesIndex
-  std::vector<float> data;    // raw data
-  std::vector<float> indices; // vertex indices
-  
-};
-
-/*
-
-shaderCode(vector<std::shared_ptr<DataStream>> attributes, vector<std::shared_ptr<DataStream>> outputStream) {
-  vec3 pos;
-  color color;
-
-  attributes[0]->Get(pos);
-  attributes[1]->Get(color);
-
-  vec3 transformedPos = transformMatrix * pos;
-
-  outputStream[0]->Set()
-}
-
 */
 

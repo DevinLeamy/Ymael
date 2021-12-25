@@ -7,12 +7,14 @@
 
 class ShaderProgram {
 public:
-  void bind(std::shared_ptr<VertexShader> vs);
-  void bind(std::shared_ptr<FragmentShader> fs);
+  ShaderProgram() = default;
+  
+  void bind(VertexShader* vs);
+  void bind(FragmentShader* fs);
 
   void run(VertexArrayObject *inStream, int vertexCount);
   void run(VertexArrayObject *inStream, const std::vector<std::vector<int>>& indices);
 private:
-  std::shared_ptr<VertexShader> vs;
-  std::shared_ptr<FragmentShader> fs;
+  VertexShader* vs;
+  FragmentShader* fs;
 };

@@ -51,6 +51,7 @@ std::vector<int> parseFaceVertexIndices(std::string indices) {
   for (std::string index : sIndices)
     res.push_back(std::stoi(index));
 
+  // { position, uv, normal }
   return res;
 }
 std::vector<std::vector<int>> getFaceIndices(std::istringstream& lineStream) {

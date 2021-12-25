@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Buffer.h" // Perhaps change to a VBO
-#include "VertexBufferObject.h"
 #include <map>
+
+#include "VertexBufferObject.h"
 
 /*
 Holds all the VertexObjectBuffers for all the 
@@ -18,6 +18,6 @@ public:
   void bind(VertexBufferObject *vbo, int attrIndex);
 
 private:
-  int nextAttr;
+  int nextAttr = 0;
   std::map<int, VertexBufferObject *> attributes;
 };

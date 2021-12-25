@@ -1,11 +1,19 @@
-
 #include <vector>
 
-#include "math/vec3.h"
 #include "Buffer.h"
+#include "math/math.h"
 
-Buffer::Buffer(std::vector<float> data, std::vector<float> indices):
+Buffer::Buffer(std::vector<float> data, std::vector<int> indices):
   data{data}, indices{indices} {}
+
+Buffer::Buffer(size_t floatCount, size_t size):
+  data{std::vector<float>(floatCount)}, indices{std::vector<int>(size)} {}
+
+void Buffer::bind(vec2& vec) {
+  indices[iIndex] = dIndex;
+  data[dIndex++] = vec.x;
+  data[dIndex++] = vec.y;
+}
 
 void Buffer::bind(vec3& vec) {
   indices[iIndex] = dIndex;
@@ -13,6 +21,8 @@ void Buffer::bind(vec3& vec) {
   data[dIndex++] = vec.y;
   data[dIndex++] = vec.z;
 }
+
+
 
 void Buffer::get(size_t index, vec3& res) const {
   res.x = data[indices[index]]; 
