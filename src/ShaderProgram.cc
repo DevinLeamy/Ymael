@@ -11,12 +11,16 @@ void ShaderProgram::bind(FragmentShader* fs) {
 }
 
 void ShaderProgram::run(VertexArrayObject *inStream, int vertexCount) {
+  TBuffer<vec3>* posBuffer = new TBuffer<vec3>(vertexCount);
+
   std::unique_ptr<VertexArrayObject> vsOutStream = std::make_unique<VertexArrayObject>();
+  vsOutStream->bind(posBuffer);
 
   for (size_t i = 0; i < vertexCount; ++i)
     vs->run(inStream, vsOutStream.get(), i);
   
   // Run the rasterizer to create a VAO with fragment data
+  
 
 }
 

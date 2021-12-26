@@ -10,6 +10,7 @@
 #include "ShaderProgram.h"
 #include "shaders/VertexShader.h"
 #include "shaders/FragmentShader.h"
+#include "Buffer.h"
 
 #include "usage/BasicVertexShader.h"
 
@@ -21,15 +22,9 @@ int main() {
   VertexArrayObject *vao = new VertexArrayObject(); 
 
   // create attribute buffers
-  VertexBufferObject *positions = new VertexBufferObject(
-    3 * model->getVertices().size(), model->getVertices().size()
-  );
-  VertexBufferObject *uvs = new VertexBufferObject(
-    2 * model->getUVs().size(), model->getUVs().size()
-  );
-  VertexBufferObject *normals = new VertexBufferObject(
-    3 * model->getNormals().size(), model->getNormals().size()
-  );
+  TBuffer<vec3> *positions = new TBuffer<vec3>(model->getVertices().size());
+  TBuffer<vec2> *uvs = new TBuffer<vec2>(model->getUVs().size());
+  TBuffer<vec3> *normals = new TBuffer<vec3>(model->getNormals().size());
 
   // load data into attribute buffers
   for (auto v : model->getVertices())

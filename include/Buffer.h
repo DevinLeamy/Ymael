@@ -3,25 +3,34 @@
 #include <vector>
 #include "math/math.h"
 
-
-class Buffer {
+class VertexBufferObject {
 public:
-  Buffer(size_t floatCount, size_t size);
-  Buffer(std::vector<float> data, std::vector<int> indices);
+  VertexBufferObject() = default;
+  virtual ~VertexBufferObject() = default;
+};
 
-  void bind(vec2& vec);
-  void bind(vec3& vec); 
+template <typename T>
+class TBuffer: public VertexBufferObject {
+public:
+  TBuffer(std::vector<T> data): data{data} {}
 
-  void get(size_t index, vec3& res) const; 
-  void get(size_t index, vec2& res) const;
-  
-  void set(size_t index, vec3& vec); 
+  TBuffer(size_t size): data{std::vector<T>(size)} {}
+
+  void bind(T& val) {
+    data[dataIndex++] = val; 
+  }
+
+  void get(size_t index, T& res) const {
+    res = data[index];
+  }
+
+  void set(size_t index, T& val) {
+    data[index] = val;
+  }
 
 private:
-  size_t dIndex = 0;            // current vertex
-  size_t iIndex = 0; // indicesIndex
-  std::vector<float> data;    // raw data
-  std::vector<int> indices; // vertex indices
+  size_t dataIndex = 0;   // current vertex
+  std::vector<T> data;    // raw data
 };
 
 /*

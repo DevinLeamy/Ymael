@@ -11,14 +11,14 @@ public:
     vec2 uv;
     vec3 normals;
 
-    inStream->getAttributeBuffer(0)->get(attrIndices[0], pos);
-    inStream->getAttributeBuffer(1)->get(attrIndices[1], uv);
-    inStream->getAttributeBuffer(2)->get(attrIndices[2], normals);
+    inStream->getAttributeBuffer<vec3>(0)->get(attrIndices[0], pos);
+    inStream->getAttributeBuffer<vec2>(1)->get(attrIndices[1], uv);
+    inStream->getAttributeBuffer<vec3>(2)->get(attrIndices[2], normals);
 
     // some manipulation
 
     // store a position
-    outStream->getAttributeBuffer(0)->bind(pos);
+    outStream->getAttributeBuffer<vec3>(0)->bind(pos);
   }
 
   void run(VertexArrayObject* inStream, VertexArrayObject* outStream, int vertexIndex) override {
