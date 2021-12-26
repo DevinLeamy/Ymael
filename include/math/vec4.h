@@ -1,11 +1,13 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 
 class vec4 {
 public:
   float x, y, z, w;
 
+  vec4(const std::vector<float>& vals);
   vec4(float x = 0, float y = 0, float z = 0, float w = 0);
 
   vec4(const vec4& other);
@@ -49,4 +51,6 @@ public:
   vec4 operator-(const vec4& right) const;
 
   vec4 operator*(float s) const;
+
+  const std::vector<float>& toVector() const;
 };

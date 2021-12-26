@@ -5,6 +5,7 @@
 
 #include "math/vec3.h"
 
+vec3::vec3(const std::vector<float>& vals): x{vals[0]}, y{vals[1]}, z{vals[2]} {}
 vec3::vec3(float x, float y, float z): x{x}, y{y}, z{z} {}
 
 vec3::vec3(const vec3& other): x{other.x}, y{other.y}, z{other.z} {}
@@ -150,3 +151,8 @@ vec3 vec3::operator*(float s) const {
 
   return res;
 }
+
+const std::vector<float>& vec3::toVector() const {
+  return { x, y, z };
+}
+

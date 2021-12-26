@@ -4,7 +4,7 @@
 #include <any>
 #include <cassert>
 
-#include "Buffer.h"
+#include "VertexBufferObject.h"
 
 /*
 Holds all the VertexObjectBuffers for all the 
@@ -14,19 +14,19 @@ attributes of all the vertices of a model
 class VertexArrayObject {
 public:
   VertexArrayObject();
-  // consider using std::variant w/ .index() 
 
   void bind(VertexBufferObject *vbo);
   void bind(VertexBufferObject *vbo, int attrIndex);
 
   // std::any getAttribute(size_t attribute, size_t index);
   
-  template<typename T>
-  TBuffer<T> *getAttributeBuffer(int attrIndex) {
+  VertexBufferObject *getAttributeBuffer(int attrIndex) {
     assert(attributes.count(attrIndex));
 
-    return dynamic_cast<TBuffer<T>*>(attributes[attrIndex]);
+    return attributes[attrIndex];
   }
+
+  bool attributeEnabled(int attrIndex) const; 
 
 private:
   int nextAttr = 0;

@@ -1,12 +1,13 @@
-#ifndef __VEC2__
-#define __VEC2__
+#pragma once
 
 #include <iostream>
+#include <vector>
 
 class vec2 {
 public:
   float x, y;
 
+  vec2(const std::vector<float>& vals);
   vec2(float x = 0, float y = 0);
 
   vec2(const vec2& other);
@@ -42,6 +43,8 @@ public:
   vec2 operator-(const vec2& right) const;
 
   vec2 operator*(float s) const;
+
+  const std::vector<float>& toVector() const;
 };
 
 #endif

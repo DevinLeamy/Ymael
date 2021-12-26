@@ -11,6 +11,9 @@ OpenGL simulator;
 
 class OpenGL {
 public:
+  const size_t WW = 800;
+  const size_t WH = 800;
+
   OpenGL() = default; 
   ~OpenGL() = default;
 

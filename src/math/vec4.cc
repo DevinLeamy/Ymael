@@ -2,8 +2,13 @@
 #include <cmath>
 #include <iostream>
 #include <cassert>
+#include <vector>
 
 #include "math/vec4.h"
+
+vec4::vec4(const std::vector<float>& vals): x{vals[0]}, y{vals[1]}, 
+  w{vals[2]}, z{vals[3]} 
+{}
 
 vec4::vec4(float x, float y, float z, float w): x{x}, y{y}, z{z}, w{w} {}
 
@@ -161,4 +166,8 @@ vec4 vec4::operator*(float s) const {
   res.w = w * s;
 
   return res;
+}
+
+const std::vector<float>& vec4::toVector() const {
+  return { x, y, z, w };
 }

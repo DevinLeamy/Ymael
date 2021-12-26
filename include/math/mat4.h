@@ -17,6 +17,8 @@ class mat4 {
 
     vec4 operator*(const vec4 &right) const; 
 
+    // const std::vector<float> &toVector() const;
+
     static mat4 scaleM(float x, float y, float z);
     static mat4 translationM(float x, float y, float z);
     static mat4 identityM();

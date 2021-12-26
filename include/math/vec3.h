@@ -1,12 +1,13 @@
-#ifndef __VEC3__
-#define __VEC3__
+#pragma once
 
 #include <iostream>
+#include <vector>
 
 class vec3 {
 public:
   float x, y, z;
 
+  vec3(const std::vector<float>& vals);
   vec3(float x = 0, float y = 0, float z = 0);
 
   vec3(const vec3& other);
@@ -53,6 +54,6 @@ public:
   vec3 operator-(const vec3& right) const;
 
   vec3 operator*(float s) const;
-};
 
-#endif
+  const std::vector<float> &toVector() const;
+};

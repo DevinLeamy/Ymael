@@ -10,11 +10,6 @@ void VertexArrayObject::bind(VertexBufferObject *vbo, int attrIndex) {
   attributes[attrIndex] = vbo;
 }
 
-// std::any VertexArrayObject::getAttribute(size_t attribute, size_t index) {
-//   if (!attributes.count(attribute)) {
-//     std::cout << "ERROR: attribute {" << attribute << "} does not exist";
-//     exit(1);
-//   }
-
-//   attributes[attribute]->get() 
-// }
+bool VertexArrayObject::attributeEnabled(int attrIndex) const {
+  return attributes.count(attrIndex) > 0;
+}

@@ -2,9 +2,11 @@
 #include <cmath>
 #include <iostream>
 #include <cassert>
+#include <vector>
 
 #include "math/vec2.h"
 
+vec2::vec2(const std::vector<float>& vals): x{vals[0]}, y{vals[1]} {}
 vec2::vec2(float x, float y): x{x}, y{y} {}
 
 vec2::vec2(const vec2& other): x{other.x}, y{other.y} {}
@@ -125,4 +127,8 @@ vec2 vec2::operator*(float s) const {
   res.y = y * s;
 
   return res;
+}
+
+const std::vector<float>& vec2::toVector() const { 
+  return { x, y };
 }
