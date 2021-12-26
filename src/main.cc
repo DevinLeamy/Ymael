@@ -11,6 +11,8 @@
 #include "shaders/VertexShader.h"
 #include "shaders/FragmentShader.h"
 
+#include "usage/BasicVertexShader.h"
+
 int main() {
   // load model
   std::unique_ptr<Model> model { loadModel("res/B.obj") };
@@ -49,7 +51,7 @@ int main() {
 
   // create shaders
   FragmentShader* fs = new FragmentShader();
-  VertexShader* vs = new VertexShader();
+  VertexShader* vs = new BasicVertexShader();
 
   // attach shaders to program
   sProgram->bind(fs);

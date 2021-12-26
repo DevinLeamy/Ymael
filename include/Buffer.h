@@ -13,6 +13,8 @@ public:
   void bind(vec3& vec); 
 
   void get(size_t index, vec3& res) const; 
+  void get(size_t index, vec2& res) const;
+  
   void set(size_t index, vec3& vec); 
 
 private:

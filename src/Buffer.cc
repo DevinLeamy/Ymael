@@ -22,13 +22,17 @@ void Buffer::bind(vec3& vec) {
   data[dIndex++] = vec.z;
 }
 
-
+void Buffer::get(size_t index, vec2& res) const {
+  res.x = data[indices[index]]; 
+  res.y = data[indices[index] + 1]; 
+}
 
 void Buffer::get(size_t index, vec3& res) const {
   res.x = data[indices[index]]; 
   res.y = data[indices[index] + 1]; 
   res.z = data[indices[index] + 2]; 
 }
+
 
 void Buffer::set(size_t index, vec3& vec) {
   data[indices[index]] = vec.x;
