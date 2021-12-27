@@ -15,7 +15,7 @@ class Rasterizer {
 public:
   // create fragment from the |vertices| vertices
   // using the outputs from the vertex shader
-  void rasterize(VertexArrayObject *vertexData, int vertices);
+  void rasterize(VertexArrayObject *vVAO, VertexArrayObject *vVAO, int vertices);
 };
 
 /*

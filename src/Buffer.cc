@@ -24,8 +24,9 @@ float getRawFloat(size_t rawIndex) const { return data[rawIndex]; }
 
 void Buffer::setRawFloat(size_t rawIndex, float val) { data[rawIndex] = val; }
 
-size_t Buffer::rawSize() const { return data.size(); }
-size_t Buffer::size() const { return rawSize() / itemSize; }
+size_t Buffer::getRawSize() const { return data.size(); }
+size_t Buffer::getSize() const { return rawSize() / itemSize; }
+size_t Buffer::getItemSize() const { return itemSize; }
 
 
 void bind(const std::vector<float> vals) {

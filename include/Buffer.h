@@ -27,8 +27,9 @@ public:
   float getRawFloat(size_t rawIndex) const; 
   float setRawFloat(size_t rawIndex, float val);
 
-  size_t rawSize() const;
-  size_t size() const;
+  size_t getRawSize() const;
+  size_t getSize() const;
+  size_t getItemSize() const;
 
 private:
   size_t rawIndex = 0; // index of the next float

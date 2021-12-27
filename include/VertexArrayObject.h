@@ -28,6 +28,8 @@ public:
 
   bool attributeEnabled(int attrIndex) const; 
 
+  std::vector<int> getEnabledAttributes() const;
+
 private:
   int nextAttr = 0;
   std::map<int, VertexBufferObject *> attributes;
