@@ -21,10 +21,10 @@ public:
   void bind(ShaderProgram* sProgram);
   void bind(const std::vector<std::vector<int>>& indices);
 
-  void draw(int triangleCnt, bool withIndices = true);
+  void draw(int vertices);
+  void draw(int vertices, const std::vector<std::vector<int>>& indices);
 
 private:
-  std::vector<std::vector<int>> indices;
   VertexArrayObject* vao;
   ShaderProgram* sProgram; 
 };

@@ -18,8 +18,6 @@ public:
   void bind(VertexBufferObject *vbo);
   void bind(VertexBufferObject *vbo, int attrIndex);
 
-  // std::any getAttribute(size_t attribute, size_t index);
-  
   VertexBufferObject *getAttributeBuffer(int attrIndex) {
     assert(attributes.count(attrIndex));
 

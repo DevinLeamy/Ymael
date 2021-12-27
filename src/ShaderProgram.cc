@@ -1,29 +1,25 @@
 #include <memory>
+#include <map>
 
 #include "ShaderProgram.h"
+#include "shaders/Shader.h"
 
-void ShaderProgram::bind(VertexShader* vs) {
-  this->vs = vs;
+
+void ShaderProgram::runShaderPrepare(Shader* shader, int itemCount) {
+  outStream = std::make_unique<VertexArrayObject>();
+  std::map<int, int> outputBuffersMap = shader->getOutputBufferMap();
+
+  for (auto& [attrIndex, itemSize] : outputBuffersMap)
+    // TODO: fix memory leak from buffers
+    outStream->bind(new VertexBufferObject { itemCount, itemSize }, attrIndex);
 }
 
-void ShaderProgram::bind(FragmentShader* fs) {
-  this->fs = fs;
+void ShaderProgram::runShaderCleanup(Shader* shader, int itemCount) {}
+
+void ShaderProgram::setInputVAO(VertexArrayObject* inVAO) { 
+  inStream = std::unique_ptr<VertexArrayObject>(inVAO);
 }
 
-void ShaderProgram::run(VertexArrayObject *inStream, int vertexCount) {
-  TBuffer<vec3>* posBuffer = new TBuffer<vec3>(vertexCount);
-
-  std::unique_ptr<VertexArrayObject> vsOutStream = std::make_unique<VertexArrayObject>();
-  vsOutStream->bind(posBuffer);
-
-  for (size_t i = 0; i < vertexCount; ++i)
-    vs->run(inStream, vsOutStream.get(), i);
-  
-  // Run the rasterizer to create a VAO with fragment data
-  
-
-}
-
-void ShaderProgram::run(VertexArrayObject *inStream, const std::vector<std::vector<int>>& indices) {
-
+VertexArrayObject* ShaderProgram::getOutputVAO() {
+  return outStream.get();
 }

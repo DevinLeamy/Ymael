@@ -11,15 +11,19 @@ void OpenGL::bind(ShaderProgram* sProgram) {
   this->sProgram = sProgram;
 }
 
-void OpenGL::bind(const std::vector<std::vector<int>>& indices) {
-  this->indices = indices;
+void OpenGL::draw(int vertices) {
+  sProgram->runShader<VertexShader>(vertices);
+
+  // int fragments = rasterizer->rasterize(); or something
+  // sProgram->runShader<FragmentShader>(fragments);
 }
 
-void OpenGL::draw(int triangleCnt, bool withIndices) {
-  if (withIndices)
-    sProgram->run(vao, indices);
-  else
-    sProgram->run(vao, triangleCnt);
+void OpenGL::draw(int vertices, const std::vector<std::vector<int>>& indices) {
+  sProgram->runShader<VertexShader>(indices);
+
+  // int fragments = rasterizer->rasterize(); 
+  // sProgram->runShader<FragmentShader>(fragments);
+  // create frame buffer from VAO
 }
 
 
