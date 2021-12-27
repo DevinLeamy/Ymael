@@ -152,7 +152,7 @@ vec3 vec3::operator*(float s) const {
   return res;
 }
 
-const std::vector<float>& vec3::toVector() const {
+std::vector<float> vec3::toVector() const {
   return { x, y, z };
 }
 

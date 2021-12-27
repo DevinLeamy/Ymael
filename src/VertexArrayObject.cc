@@ -1,4 +1,5 @@
 #include "VertexArrayObject.h"
+#include "utility.h"
 
 VertexArrayObject::VertexArrayObject() {}
 
@@ -12,6 +13,16 @@ void VertexArrayObject::bind(VertexBufferObject *vbo, int attrIndex) {
 
 bool VertexArrayObject::attributeEnabled(int attrIndex) const {
   return attributes.count(attrIndex) > 0;
+}
+
+VertexBufferObject* VertexArrayObject::getAttributeBuffer(int attrIndex) {
+  assert(attributes.count(attrIndex));
+
+  return attributes[attrIndex];
+}
+
+int VertexArrayObject::getBufferCount() const {
+  return attributes.size();
 }
 
 std::vector<int> VertexArrayObject::getEnabledAttributes() const {

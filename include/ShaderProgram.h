@@ -20,12 +20,15 @@ public:
   void runShader(const std::vector<std::vector<int>> indices) {
     if (shaders.count(TYPE_NAME(T)) == 0) return;
 
+    DEBUG("PREPARE SHADER");
     Shader* shader = shaders[TYPE_NAME(T)];
     runShaderPrepare(shader, indices.size());
 
+    DEBUG("RUN SHADER");
     for (const std::vector<int> attrIndices : indices)
-      shader->run(inStream, outStream, attrIndices);
+      shader->run(inStream.get(), outStream.get(), attrIndices);
 
+    DEBUG("CLEANUP SHADER");
     runShaderCleanup(shader, indices.size());
   }
 
@@ -33,12 +36,15 @@ public:
   void runShader(int itemCount) {
     if (shaders.count(TYPE_NAME(T)) == 0) return;
 
+    DEBUG("PREPARE SHADER");
     Shader* shader = shaders[TYPE_NAME(T)];
     runShaderPrepare(shader, itemCount);
 
-    for (int i = 0; i < vertexCount; ++i)
-      shader->run(inStream, outStream, i);
+    DEBUG("RUN SHADER");
+    for (int i = 0; i < itemCount; ++i)
+      shader->run(inStream.get(), outStream.get(), std::vector<int>(inStream->getBufferCount(), i));
 
+    DEBUG("CLEANUP SHADER");
     runShaderCleanup(shader, itemCount);
   }
 private:

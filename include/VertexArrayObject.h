@@ -18,15 +18,12 @@ public:
   void bind(VertexBufferObject *vbo);
   void bind(VertexBufferObject *vbo, int attrIndex);
 
-  VertexBufferObject *getAttributeBuffer(int attrIndex) {
-    assert(attributes.count(attrIndex));
-
-    return attributes[attrIndex];
-  }
+  VertexBufferObject *getAttributeBuffer(int attrIndex); 
 
   bool attributeEnabled(int attrIndex) const; 
-
   std::vector<int> getEnabledAttributes() const;
+
+  int getBufferCount() const;
 
 private:
   int nextAttr = 0;

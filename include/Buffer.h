@@ -9,15 +9,15 @@ public:
   Buffer(size_t itemCnt, size_t itemSize);
   Buffer(std::vector<float> data, size_t itemSize);
 
+  void bind(float val);
   void bind(vec2& vec);
   void bind(vec3& vec); 
   void bind(vec4& vec);
-  void bind(float val);
 
   void get(size_t itemIndex, vec2& res) const; 
   void get(size_t itemIndex, vec3& res) const;
   void get(size_t itemIndex, vec4& res) const;
-  void get(size_t itemIndex, float) const;
+  void get(size_t itemIndex, float& val) const;
 
   void set(size_t itemIndex, vec2& vec); 
   void set(size_t itemIndex, vec3& vec); 
@@ -25,7 +25,7 @@ public:
   void set(size_t itemIndex, float val);
 
   float getRawFloat(size_t rawIndex) const; 
-  float setRawFloat(size_t rawIndex, float val);
+  void setRawFloat(size_t rawIndex, float val);
 
   size_t getRawSize() const;
   size_t getSize() const;
@@ -37,10 +37,10 @@ private:
   std::vector<float> data; // raw data
 
   void bind(const std::vector<float> vals);
-  const std::vector<float>& get(size_t itemIndex, size_t floatCnt);
+  std::vector<float> getSegment(size_t itemIndex, size_t floatCnt) const;
   void set(size_t itemIndex, const std::vector<float>& vals);
 
-  void rawIndex(size_t itemIndex) const;
+  size_t getRawIndex(size_t itemIndex) const;
 };
 
 /*

@@ -3,6 +3,7 @@
 
 #include "ShaderProgram.h"
 #include "shaders/Shader.h"
+#include "utility.h"
 
 
 void ShaderProgram::runShaderPrepare(Shader* shader, int itemCount) {
@@ -11,7 +12,7 @@ void ShaderProgram::runShaderPrepare(Shader* shader, int itemCount) {
 
   for (auto& [attrIndex, itemSize] : outputBuffersMap)
     // TODO: fix memory leak from buffers
-    outStream->bind(new VertexBufferObject { itemCount, itemSize }, attrIndex);
+    outStream->bind(new VertexBufferObject { (size_t) itemCount, (size_t) itemSize }, attrIndex);
 }
 
 void ShaderProgram::runShaderCleanup(Shader* shader, int itemCount) {}

@@ -1,7 +1,9 @@
 #include "shaders/VertexShader.h"
 
 
-VertexShader::VertexShader(): modelMatrix{mat4::identityM()}, viewMatrix{mat4::identityM()}, 
+VertexShader::VertexShader(): Shader{}, 
+  modelMatrix{mat4::identityM()}, 
+  viewMatrix{mat4::identityM()}, 
   projectionMatrix{mat4::identityM()}
 {}
 

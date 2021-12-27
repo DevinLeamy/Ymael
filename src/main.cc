@@ -13,20 +13,25 @@
 #include "Buffer.h"
 
 #include "usage/BasicVertexShader.h"
+#include "usage/BasicFragmentShader.h"
 
 int main() {
   // load model
+  DEBUG("LOAD MODEL");
   std::unique_ptr<Model> model { loadModel("res/B.obj") };
 
   // create vao
+  DEBUG("CREATE VAO");
   VertexArrayObject *vao = new VertexArrayObject(); 
 
   // create attribute buffers
-  TBuffer<vec3> *positions = new TBuffer<vec3>(model->getVertices().size());
-  TBuffer<vec2> *uvs = new TBuffer<vec2>(model->getUVs().size());
-  TBuffer<vec3> *normals = new TBuffer<vec3>(model->getNormals().size());
+  DEBUG("CREATE ATTRIBUTE BUFFERS");
+  VertexBufferObject *positions = new VertexBufferObject(model->getVertices().size(), 3);
+  VertexBufferObject *uvs = new VertexBufferObject(model->getUVs().size(), 2);
+  VertexBufferObject *normals = new VertexBufferObject(model->getNormals().size(), 3);
 
   // load data into attribute buffers
+  DEBUG("LOAD DATA INTO ATTRIBUTE BUFFERS");
   for (auto v : model->getVertices())
     positions->bind(v);
   
@@ -37,36 +42,47 @@ int main() {
     normals->bind(v);
   
   // add attribute buffers to vao
+  DEBUG("BIND ATTRIBUTE BUFFERS TO VAO");
   vao->bind(positions);
   vao->bind(uvs);
   vao->bind(normals);
 
   // create shader program
+  DEBUG("CREATE SHADER PROGRAM");
   ShaderProgram* sProgram = new ShaderProgram();
 
   // create shaders
-  FragmentShader* fs = new FragmentShader();
+  DEBUG("CREATE VS AND FS");
+  FragmentShader* fs = new BasicFragmentShader();
   VertexShader* vs = new BasicVertexShader();
 
+  /*
+  TODO: set vertex shader uniforms
+  /*
+
   // attach shaders to program
-  sProgram->bind(fs);
-  sProgram->bind(vs);
+  DEBUG("ATTACH SHADERS TO SHADER PROGRAM");
+  sProgram->bind<VertexShader>(vs);
+  sProgram->bind<FragmentShader>(fs);
 
   // load everything into the state machine 
+  DEBUG("BIND COMPONENTS TO OPENGL STATE MACHINE");
   GL->bind(vao);
   GL->bind(sProgram);
-  GL->bind(model->getIndices());
 
   // draw triangles
-  GL->draw(model->getIndices().size());
+  DEBUG("DRAW TRIANGLES");
+  GL->draw(model->getIndices());
+
+  DEBUG("RENDER COMPLETE");
 
 
-  delete positions;
-  delete uvs;
-  delete normals;
-  delete vao;
-  delete fs;
-  delete vs;
-  delete sProgram;
+  // delete positions;
+  // delete uvs;
+  // delete normals;
+  // delete vao;
+  // delete fs;
+  // delete vs;
+  // delete sProgram;
 }
 

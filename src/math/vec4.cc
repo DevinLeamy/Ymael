@@ -168,6 +168,6 @@ vec4 vec4::operator*(float s) const {
   return res;
 }
 
-const std::vector<float>& vec4::toVector() const {
+std::vector<float> vec4::toVector() const {
   return { x, y, z, w };
 }

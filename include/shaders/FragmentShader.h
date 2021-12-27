@@ -4,5 +4,7 @@
 
 class FragmentShader: public Shader {
 public:
-  
+  FragmentShader();
+
+  ~FragmentShader() = default;
 };

@@ -52,5 +52,5 @@ public:
 
   vec4 operator*(float s) const;
 
-  const std::vector<float>& toVector() const;
+  std::vector<float> toVector() const;
 };

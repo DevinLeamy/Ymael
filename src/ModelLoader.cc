@@ -10,6 +10,7 @@
 #include "math/vec3.h"
 #include "math/vec2.h"
 #include "Model.h"
+#include "utility.h"
 
 vec2 getVec2(std::istringstream& lineStream) {
   vec2 res;
@@ -44,6 +45,7 @@ std::vector<std::string> split(std::string s, char c) {
   return res;
 }
 
+// format: position/uv/normal
 std::vector<int> parseFaceVertexIndices(std::string indices) {
   std::vector<int> res;
   std::vector<std::string> sIndices = split(indices, '/');
@@ -51,13 +53,14 @@ std::vector<int> parseFaceVertexIndices(std::string indices) {
   for (std::string index : sIndices)
     res.push_back(std::stoi(index));
 
-  // { position, uv, normal }
   return res;
 }
 std::vector<std::vector<int>> getFaceIndices(std::istringstream& lineStream) {
   std::vector<std::vector<int>> res(3);
 
   std::string v1, v2, v3;
+  lineStream >> v1 >> v2 >> v3;
+
   res[0] = parseFaceVertexIndices(v1);
   res[1] = parseFaceVertexIndices(v2);
   res[2] = parseFaceVertexIndices(v3);

@@ -18,6 +18,8 @@ main: $(OBJ)
 %.o: %.cc
 	$(CC) $(CCFLAGS) $(INC) -c -o $@ $<
 
+-include $(DEP)
+
 .PHONY: clean
 
 clean:

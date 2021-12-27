@@ -24,10 +24,6 @@ enum MatrixType {
 };
 
 class VertexShader: public Shader {
-  // Model matrix
-  // View matrix
-  // Projection matrix
-  // Viewport mapping (transformation)
 public:
   VertexShader();
 

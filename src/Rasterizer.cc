@@ -6,15 +6,29 @@
 #include "OpenGL.h"
 #include "utility.h"
 
-void Rasterizer::rasterize(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int vertices) {
+size_t interpolate(VertexArrayObject*, VertexArrayObject*, int);
+std::vector<vec2> getCoveredPixels(const vec3&, const vec3&, const vec3&);
+bool edgeFunction(const vec3&, const vec3&, const vec3&);
+bool insideTriangle(const vec2&, const vec3&, const vec3&, const vec3&);
+bool isLeftOrTopEdge(const vec3&, const vec3&, const vec3&);
+vec3 getBarycentricCoords(const vec2&, const vec3&, const vec3&, const vec3&);
+float getTriangleArea(const vec2&, const vec2&, const vec2&);
+
+int Rasterizer::rasterize(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int vertices) {
   assert(vertices % 3 == 0);
 
-  for (int i = 0; i < vertices; i += 3)
-    interpolate(vVAO, fVAO, i);
+  int fragments = 0;
+
+  for (int i = 0; i < vertices; i += 3) {
+    DEBUG("RASTERIZE TRIANGLE");
+    fragments += interpolate(vVAO, fVAO, i);
+  }
+
+  return fragments;
 };
 
 // vIndex == index of the first vertex
-void interpolate(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int vIndex) {
+size_t interpolate(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int vIndex) {
   // vertices of the triangle are [vIndex, vIndex + 1, vIndex + 2]
   // assumes position is the first attribute
   vec3 v0, v1, v2;
@@ -34,7 +48,6 @@ void interpolate(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int vIndex) {
       VertexBufferObject* inVBO = vVAO->getAttributeBuffer(attrIndex);
       VertexBufferObject* outVBO = fVAO->getAttributeBuffer(attrIndex);
 
-      size_t rawSize = inVBO->getRawSize();
       size_t itemSize = inVBO->getItemSize();
 
       for (size_t i = 0; i < itemSize; ++i) {
@@ -48,23 +61,25 @@ void interpolate(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int vIndex) {
       }
     }
   }
+
+  return coveredPixels.size();
 }
 
 // TODO: optimize
 std::vector<vec2> getCoveredPixels(const vec3& p1, const vec3& p2, const vec3& p3) {
   std::vector<vec2> covered;
 
-  int minX = clamp<int>(std::min({p1.x, p2.x, p3.x}), 0, GL->WW);
-  int maxX = clamp<int>(std::max({p1.x, p2.x, p3.x}), 0, GL->WW);
+  int minX = std::clamp<int>(std::min({p1.x, p2.x, p3.x}), 0, GL->WW);
+  int maxX = std::clamp<int>(std::max({p1.x, p2.x, p3.x}), 0, GL->WW);
 
-  int minY = clamp<int>(std::min({p1.y, p2.y, p3.y}), 0, GL->WH);
-  int maxY = clamp<int>(std::max({p1.y, p2.y, p3.y}), 0, GL->WH);
+  int minY = std::clamp<int>(std::min({p1.y, p2.y, p3.y}), 0, GL->WH);
+  int maxY = std::clamp<int>(std::max({p1.y, p2.y, p3.y}), 0, GL->WH);
 
   for (int i = minX; i < maxX; ++i) {
     bool wasInside = false;
 
     for (int j = minY; j < maxY; ++j) {
-      vec2 point{i, j};
+      vec2 point{(float) i, (float) j};
 
       if (insideTriangle(point, p1, p2, p3)) {
         covered.push_back(point);

@@ -129,6 +129,6 @@ vec2 vec2::operator*(float s) const {
   return res;
 }
 
-const std::vector<float>& vec2::toVector() const { 
+std::vector<float> vec2::toVector() const { 
   return { x, y };
 }
