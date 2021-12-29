@@ -32,6 +32,11 @@ mat4& mat4::operator=(mat4&& other) {
   return *this;
 }
 
+mat4::mat4() {
+  for (size_t i = 0; i < 4; ++i)
+    for (size_t j = 0; j < 4; ++j)
+      m[i][j] = 0.0; 
+}
 
 mat4::mat4(std::vector<std::vector<float>> m) {
   assert(m.size() == 4 && m[0].size() == 4);
@@ -46,7 +51,18 @@ vec4 mat4::operator*(const vec4 &right) const {
 
   for (size_t i = 0; i < 4; ++i)
     for (size_t j = 0; j < 4; ++j)
-      res[i] = m[i][j] * right[j];
+      res[i] += m[i][j] * right[j];
+  
+  return res;
+}
+
+mat4 mat4::operator*(const mat4 &right) const {
+  mat4 res;
+
+  for (size_t i = 0; i < 4; ++i) 
+    for (size_t j = 0; j < 4; ++j)
+      for (size_t k = 0; k < 4; ++k)
+        res.m[i][j] += m[i][k] * right.m[k][j];
   
   return res;
 }

@@ -6,4 +6,4 @@
 
 #include "math/mat4.h"
 
-#include "math/quart.h"
+#include "math/quat.h"

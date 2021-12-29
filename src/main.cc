@@ -11,11 +11,18 @@
 #include "shaders/VertexShader.h"
 #include "shaders/FragmentShader.h"
 #include "Buffer.h"
+#include "Transform.h"
 
 #include "usage/BasicVertexShader.h"
 #include "usage/BasicFragmentShader.h"
 
 int main() {
+  Transform modelTransform {
+    .position = vec3(10, 0, 0),
+    .rotation = vec3(0, 0, 0),
+    .scale = vec3(20, 20, 20)
+  };
+
   // load model
   DEBUG("LOAD MODEL");
   std::unique_ptr<Model> model { loadModel("res/B.obj") };
@@ -56,9 +63,7 @@ int main() {
   FragmentShader* fs = new BasicFragmentShader();
   VertexShader* vs = new BasicVertexShader();
 
-  /*
-  TODO: set vertex shader uniforms
-  /*
+  vs->setUniform(MODEL_MATRIX, createTransformMat(modelTransform));
 
   // attach shaders to program
   DEBUG("ATTACH SHADERS TO SHADER PROGRAM");
