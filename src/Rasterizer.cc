@@ -7,11 +7,11 @@
 #include "utility.h"
 
 size_t interpolate(VertexArrayObject*, VertexArrayObject*, int);
-std::vector<vec2> getCoveredPixels(const vec3&, const vec3&, const vec3&);
-bool edgeFunction(const vec3&, const vec3&, const vec3&);
-bool insideTriangle(const vec2&, const vec3&, const vec3&, const vec3&);
-bool isLeftOrTopEdge(const vec3&, const vec3&, const vec3&);
-vec3 getBarycentricCoords(const vec2&, const vec3&, const vec3&, const vec3&);
+std::vector<vec2> getCoveredPixels(const vec4&, const vec4&, const vec4&);
+bool edgeFunction(const vec4&, const vec4&, const vec4&);
+bool insideTriangle(const vec2&, const vec4&, const vec4&, const vec4&);
+bool isLeftOrTopEdge(const vec4&, const vec4&, const vec4&);
+vec3 getBarycentricCoords(const vec2&, const vec4&, const vec4&, const vec4&);
 float getTriangleArea(const vec2&, const vec2&, const vec2&);
 
 int Rasterizer::rasterize(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int vertices) {
@@ -31,7 +31,7 @@ int Rasterizer::rasterize(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int 
 size_t interpolate(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int vIndex) {
   // vertices of the triangle are [vIndex, vIndex + 1, vIndex + 2]
   // assumes position is the first attribute
-  vec3 v0, v1, v2;
+  vec4 v0, v1, v2;
 
   vVAO->getAttributeBuffer(0)->get(vIndex, v0);
   vVAO->getAttributeBuffer(0)->get(vIndex + 1, v1);
@@ -62,12 +62,17 @@ size_t interpolate(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int vIndex)
     }
   }
 
+  for (vec2 pixel : coveredPixels)
+    PRINT(pixel);
+
   return coveredPixels.size();
 }
 
 // TODO: optimize
-std::vector<vec2> getCoveredPixels(const vec3& p1, const vec3& p2, const vec3& p3) {
+std::vector<vec2> getCoveredPixels(const vec4& p1, const vec4& p2, const vec4& p3) {
   std::vector<vec2> covered;
+
+  // PRINT(p1 << p2 << p3);
 
   int minX = std::clamp<int>(std::min({p1.x, p2.x, p3.x}), 0, GL->WW);
   int maxX = std::clamp<int>(std::max({p1.x, p2.x, p3.x}), 0, GL->WW);
@@ -95,13 +100,13 @@ std::vector<vec2> getCoveredPixels(const vec3& p1, const vec3& p2, const vec3& p
 // E(P) > 0 if P is to the right side of the edge
 // E(P) = 0 if P is on the edge
 // E(P) < 0 if P is to the left side of the edge
-bool edgeFunction(const vec2& p, const vec3& v0, const vec3& v1) {
+bool edgeFunction(const vec2& p, const vec4& v0, const vec4& v1) {
   // https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/rasterization-stage
   return (p.x - v0.x) * (v1.y - v0.y) -
          (p.y - v0.y) * (v1.x - v0.x);
 }
 
-bool insideTriangle(const vec2& p, const vec3& v0, const vec3& v1, const vec3& v2) {
+bool insideTriangle(const vec2& p, const vec4& v0, const vec4& v1, const vec4& v2) {
   bool inside = true;
 
   float e0 = edgeFunction(p, v0, v1);
@@ -115,7 +120,7 @@ bool insideTriangle(const vec2& p, const vec3& v0, const vec3& v1, const vec3& v
   return inside;
 }
 
-bool isLeftOrTopEdge(const vec3& v0, const vec3& v1, const vec3& other) {
+bool isLeftOrTopEdge(const vec4& v0, const vec4& v1, const vec4& other) {
   // top edge test
   if (v0.y == v1.y && other.y > v0.y)
     return true;
@@ -127,7 +132,7 @@ bool isLeftOrTopEdge(const vec3& v0, const vec3& v1, const vec3& other) {
   return false;
 }
 
-vec3 getBarycentricCoords(const vec2& p, const vec3& v0, const vec3& v1, const vec3& v2) {
+vec3 getBarycentricCoords(const vec2& p, const vec4& v0, const vec4& v1, const vec4& v2) {
   vec2 p0{v0.x, v1.y}, p1{v1.x, v1.y}, p2{v2.x, v2.y};
 
   float totalArea = getTriangleArea(p0, p1, p2);

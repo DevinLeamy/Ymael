@@ -14,10 +14,12 @@ void Buffer::bind(vec2& vec) { bind(vec.toVector()); }
 void Buffer::bind(vec3& vec) { bind(vec.toVector()); }
 void Buffer::bind(vec4& vec) { bind(vec.toVector()); }
 
+void Buffer::get(size_t itemIndex, float& res) const { res = data[getRawIndex(itemIndex)]; }
 void Buffer::get(size_t itemIndex, vec2& res) const { res = vec2(getSegment(itemIndex, 2)); }
 void Buffer::get(size_t itemIndex, vec3& res) const { res = vec3(getSegment(itemIndex, 3)); }
 void Buffer::get(size_t itemIndex, vec4& res) const { res = vec4(getSegment(itemIndex, 4)); }
 
+void Buffer::set(size_t itemIndex, float val) { data[getRawIndex(itemIndex)] = val; } 
 void Buffer::set(size_t itemIndex, vec2& vec) { set(itemIndex, vec.toVector()); }
 void Buffer::set(size_t itemIndex, vec3& vec) { set(itemIndex, vec.toVector()); }
 void Buffer::set(size_t itemIndex, vec4& vec) { set(itemIndex, vec.toVector()); }
@@ -38,7 +40,7 @@ void Buffer::bind(const std::vector<float> vals) {
 
 std::vector<float> Buffer::getSegment(size_t itemIndex, size_t floatCnt) const {
   std::vector<float> vals;
-  size_t rawIndex = this->getRawIndex(itemIndex);
+  size_t rawIndex = getRawIndex(itemIndex);
   for (size_t i = 0; i < floatCnt; ++i)
     vals.push_back(data[rawIndex + i]);
   

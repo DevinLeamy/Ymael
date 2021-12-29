@@ -12,9 +12,12 @@
 #include "shaders/FragmentShader.h"
 #include "Buffer.h"
 #include "Transform.h"
+#include "Camera.h"
 
 #include "usage/BasicVertexShader.h"
 #include "usage/BasicFragmentShader.h"
+
+Camera camera;
 
 int main() {
   Transform modelTransform {
@@ -25,7 +28,7 @@ int main() {
 
   // load model
   DEBUG("LOAD MODEL");
-  std::unique_ptr<Model> model { loadModel("res/B.obj") };
+  std::unique_ptr<Model> model { loadModel("res/cube.obj") };
 
   // create vao
   DEBUG("CREATE VAO");
@@ -64,6 +67,8 @@ int main() {
   VertexShader* vs = new BasicVertexShader();
 
   vs->setUniform(MODEL_MATRIX, createTransformMat(modelTransform));
+  // vs->setUniform(VIEW_MATRIX, camera.viewMatrix());
+  // vs->setUniform(PROJECTION_MATRIX, Camera::projectionMatrix(90.0, 1.0, 0.5, 10.0));
 
   // attach shaders to program
   DEBUG("ATTACH SHADERS TO SHADER PROGRAM");

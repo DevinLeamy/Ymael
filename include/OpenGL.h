@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Rasterizer.h"
+#include "Screen.h"
 
 /*
 OpenGL simulator;
@@ -28,6 +29,7 @@ public:
 private:
   void doDraw();
   std::unique_ptr<Rasterizer> rasterizer;
+  std::unique_ptr<Screen> screen;
   VertexArrayObject* vao;
   ShaderProgram* sProgram; 
 };

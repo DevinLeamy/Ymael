@@ -11,7 +11,7 @@ public:
     inputBufferMap[3] = 3; // colours
 
     outputBufferMap[0] = 4; // position
-    outputBufferMap[1] = 1; // uvs 
+    outputBufferMap[1] = 2; // uvs 
   }
 
   ~BasicVertexShader() = default;
@@ -36,7 +36,7 @@ public:
 
     // store a position
     DEBUG("SET VERTEX SHADER OUTPUTS");
-    outStream->getAttributeBuffer(0)->bind(pos);
+    outStream->getAttributeBuffer(0)->bind(glPos);
     outStream->getAttributeBuffer(1)->bind(uv);
   }
 };

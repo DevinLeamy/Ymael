@@ -14,15 +14,15 @@ public:
   void bind(vec3& vec); 
   void bind(vec4& vec);
 
+  void get(size_t itemIndex, float& val) const;
   void get(size_t itemIndex, vec2& res) const; 
   void get(size_t itemIndex, vec3& res) const;
   void get(size_t itemIndex, vec4& res) const;
-  void get(size_t itemIndex, float& val) const;
 
+  void set(size_t itemIndex, float val);
   void set(size_t itemIndex, vec2& vec); 
   void set(size_t itemIndex, vec3& vec); 
   void set(size_t itemIndex, vec4& vec); 
-  void set(size_t itemIndex, float val);
 
   float getRawFloat(size_t rawIndex) const; 
   void setRawFloat(size_t rawIndex, float val);
@@ -31,7 +31,9 @@ public:
   size_t getSize() const;
   size_t getItemSize() const;
 
-private:
+  virtual ~Buffer() = default;
+
+protected:
   size_t rawIndex = 0; // index of the next float
   size_t itemSize; // floats in each value
   std::vector<float> data; // raw data

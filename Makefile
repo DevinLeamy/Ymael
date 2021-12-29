@@ -5,6 +5,7 @@ SOURCE = src
 INC = -I include -I lib 
 BIN = bin
 EXEC = main
+LIB = -lncurses
 
 
 SRC = $(wildcard $(SOURCE)/**/*.cc) $(wildcard $(SOURCE)/*.cc)
@@ -13,7 +14,7 @@ DEP = $(SRC:.cc=.d)
 
 main: $(OBJ)
 	@mkdir -p $(BIN)
-	$(CC) $(CCFLAGS) $(OBJ) -o $(BIN)/main
+	$(CC) $(CCFLAGS) $(OBJ) $(LIB) -o $(BIN)/main
 
 %.o: %.cc
 	$(CC) $(CCFLAGS) $(INC) -c -o $@ $<
