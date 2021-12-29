@@ -1,8 +1,11 @@
 #include <iostream>
 #include <algorithm>
 
-#define PRINTLN(x) ; //std::cout << x << std::endl
-#define PRINT(x) ; // std::cout << x
+// #define PRINTLN(x) std::cout << x << std::endl
+// #define PRINT(x) std::cout << x
+
+#define PRINTLN(x) ;
+#define PRINT(x) ; 
 
 #define DEBUG(x) if (false) std::cout << "DEBUG: " << x << std::endl
 

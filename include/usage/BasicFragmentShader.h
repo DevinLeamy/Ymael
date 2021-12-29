@@ -1,3 +1,5 @@
+#include <string>
+
 #include "shaders/FragmentShader.h"
 #include "math/math.h"
 
@@ -14,6 +16,8 @@ public:
   ~BasicFragmentShader() = default;
 
   void run(VertexArrayObject *inStream, VertexArrayObject *outStream, std::vector<int> attrIndices) override {
+    std::string shades = ".o*";
+
     vec4 pos; // in
     vec2 uvs; // in
 
@@ -24,7 +28,7 @@ public:
     inStream->getAttributeBuffer(1)->get(attrIndices[1], uvs);
 
     screenCoord = vec3(pos.x, pos.y, pos.z);
-    colour = vec3(255, 255, 255);
+    colour = vec3((int) (uvs.length() * 5) % shades.size(), 255, 255);
 
     outStream->getAttributeBuffer(0)->bind(screenCoord);
     outStream->getAttributeBuffer(1)->bind(colour);

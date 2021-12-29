@@ -17,6 +17,7 @@ mat4 createTransformMat(Transform transform) {
   mat4 T = mat4::translationM(pos.x, pos.y, pos.z);
   mat4 S = mat4::scaleM(scale.x, scale.y, scale.z);
   mat4 R = quat::rotationQuat(rot.x, rot.y, rot.z).toMatrix();
+  // mat4 R = mat4::identityM();
 
   return T * R * S;
 }

@@ -38,8 +38,6 @@ size_t interpolate(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int vIndex)
   vVAO->getAttributeBuffer(0)->get(vIndex + 1, v1);
   vVAO->getAttributeBuffer(0)->get(vIndex + 2, v2);
 
-  PRINT(v0 << v1 << v2);
-
   std::vector<vec2> coveredPixels = getCoveredPixels(v0, v1, v2);
 
   std::vector<int> attrIndices = vVAO->getEnabledAttributes();
@@ -85,7 +83,7 @@ size_t interpolate(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int vIndex)
   }
 
   for (vec2 pixel : coveredPixels)
-    PRINT(pixel);
+    PRINT("Covered: " << pixel);
 
   return coveredPixels.size();
 }
@@ -94,8 +92,7 @@ size_t interpolate(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int vIndex)
 std::vector<vec2> getCoveredPixels(const vec4& p1, const vec4& p2, const vec4& p3) {
   std::vector<vec2> covered;
 
-  // PRINT(p1 << p2 << p3);
-  PRINT(p1);
+  PRINT("95: " << p1 << p2 << p3);
 
   int minX = std::clamp<int>(std::min({p1.x, p2.x, p3.x}), 0, CONST::WW);
   int maxX = std::clamp<int>(std::max({p1.x, p2.x, p3.x}), 0, CONST::WW);
@@ -123,10 +120,9 @@ std::vector<vec2> getCoveredPixels(const vec4& p1, const vec4& p2, const vec4& p
 // E(P) > 0 if P is to the right side of the edge
 // E(P) = 0 if P is on the edge
 // E(P) < 0 if P is to the left side of the edge
-bool edgeFunction(const vec2& p, const vec4& v0, const vec4& v1) {
+float edgeFunction(const vec2& p, const vec4& v0, const vec4& v1) {
   // https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/rasterization-stage
-  return (p.x - v0.x) * (v1.y - v0.y) -
-         (p.y - v0.y) * (v1.x - v0.x);
+  return (p.x - v0.x) * (v1.y - v0.y) - (p.y - v0.y) * (v1.x - v0.x);
 }
 
 bool insideTriangle(const vec2& p, const vec4& v0, const vec4& v1, const vec4& v2) {
@@ -169,13 +165,13 @@ vec3 getBarycentricCoords(const vec2& p, const vec4& v0, const vec4& v1, const v
 
   assert(b0 >= 0 && b1 >= 0 && b2 >= 0);
 
-  // PRINTLN(b0 + b1 + b2 << " " << totalArea);
-  // assert(abs((b0 + b1 + b2) - 1.0f) < 0.01f);
+  // PRINTLN(p << b0 * totalArea << " " << b1 * totalArea << " " << b2 * totalArea << " " << totalArea << " " << b0 << " " << b1 + b2);
+  // assert((int) (totalArea * b0 + totalArea * b1 + totalArea * b2) == (int) totalArea);
 
   return vec3{b0, b1, b2};
 }
 
-float getTriangleArea(const vec2& v0, const vec2& v1, const vec2& v2) {
-  // https://ncalculators.com/geometry/triangle-area-by-3-points.htm
-  return abs(v0.x * (v1.y - v2.y) + v1.x * (v2.y - v0.y) + v2.x * (v0.y - v1.y)) * 0.5;
+float getTriangleArea(const vec2& A, const vec2& B, const vec2& C) {
+  // https://www.mathopenref.com/coordtrianglearea.html
+  return abs(A.x * (B.y - C.y) + B.x * (C.y - A.y) + C.x * (A.y - B.y)) * 0.5f;
 }

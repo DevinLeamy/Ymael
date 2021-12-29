@@ -51,7 +51,7 @@ std::vector<int> parseFaceVertexIndices(std::string indices) {
   std::vector<std::string> sIndices = split(indices, '/');
 
   for (std::string index : sIndices)
-    res.push_back(std::stoi(index));
+    res.push_back(std::stoi(index) - 1);
 
   return res;
 }

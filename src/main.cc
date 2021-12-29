@@ -21,9 +21,9 @@ Camera camera;
 
 int main() {
   Transform modelTransform {
-    .position = vec3(0, 0, 0),
+    .position = vec3(80, 40, 0),
     .rotation = vec3(0, 0, 0),
-    .scale = vec3(20, 20, 20)
+    .scale = vec3(30, 30, 30)
   };
 
   // load model
@@ -68,8 +68,8 @@ int main() {
   VertexShader* vs = new BasicVertexShader();
 
   vs->setUniform(MODEL_MATRIX, createTransformMat(modelTransform));
-  // vs->setUniform(VIEW_MATRIX, camera.viewMatrix());
-  // vs->setUniform(PROJECTION_MATRIX, Camera::projectionMatrix(90.0, 1.0, 0.5, 10.0));
+  vs->setUniform(VIEW_MATRIX, camera.viewMatrix());
+  vs->setUniform(PROJECTION_MATRIX, Camera::projectionMatrix(90.0, 1.0, -10, 100.0));
 
   // attach shaders to program
   DEBUG("ATTACH SHADERS TO SHADER PROGRAM");
@@ -85,7 +85,12 @@ int main() {
   DEBUG("DRAW TRIANGLES");
 
   GL->draw(model->getIndices());
-  while(1);
+  while(1) {
+    modelTransform.rotation.y += PI / 30;
+    // modelTransform.rotation.x += PI / 40;
+    vs->setUniform(MODEL_MATRIX, createTransformMat(modelTransform));
+    GL->draw(model->getIndices());
+  }
 
   DEBUG("RENDER COMPLETE");
 

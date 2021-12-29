@@ -26,7 +26,8 @@ public:
 
     DEBUG("RUN SHADER");
     for (const std::vector<int> attrIndices : indices)
-      shader->run(inStream.get(), outStream.get(), attrIndices);
+      shader->run(inStream, outStream, attrIndices);
+      // shader->run(inStream.get(), outStream.get(), attrIndices);
 
     DEBUG("CLEANUP SHADER");
     runShaderCleanup(shader, indices.size());
@@ -42,7 +43,8 @@ public:
 
     DEBUG("RUN SHADER");
     for (int i = 0; i < itemCount; ++i)
-      shader->run(inStream.get(), outStream.get(), std::vector<int>(inStream->getBufferCount(), i));
+      shader->run(inStream, outStream, std::vector<int>(inStream->getBufferCount(), i));
+      // shader->run(inStream.get(), outStream.get(), std::vector<int>(inStream->getBufferCount(), i));
 
     DEBUG("CLEANUP SHADER");
     runShaderCleanup(shader, itemCount);
@@ -54,6 +56,8 @@ private:
   std::map<std::string, Shader*> shaders;
 
   // in/out to/from a shader 
-  std::unique_ptr<VertexArrayObject> inStream;
-  std::unique_ptr<VertexArrayObject> outStream; 
+  VertexArrayObject* inStream;
+  VertexArrayObject* outStream;
+  // std::unique_ptr<VertexArrayObject> inStream;
+  // std::unique_ptr<VertexArrayObject> outStream; 
 };

@@ -4,11 +4,12 @@
 #include "VertexArrayObject.h"
 #include "utility.h"
 #include "CursesScreen.h"
-// #include "Screen.h"
+#include "Screen.h"
 
 OpenGL::OpenGL() {
   rasterizer = std::make_unique<Rasterizer>();
   screen = std::make_unique<CursesScreen>(CONST::WW, CONST::WH);
+  // screen = std::make_unique<Screen>(CONST::WW, CONST::WH);
 }
 
 void OpenGL::bind(VertexArrayObject* vao) { this->vao = vao; }
@@ -96,6 +97,8 @@ void OpenGL::doDraw() {
 
   DEBUG("DRAW TO SCREEN");
   screen->draw();
+
+  DEBUG("RENDER COMPLETE");
 }
 
 const std::unique_ptr<OpenGL> GL = std::make_unique<OpenGL>();
