@@ -9,6 +9,8 @@ public:
   Buffer(size_t itemCnt, size_t itemSize);
   Buffer(std::vector<float> data, size_t itemSize);
 
+  friend std::ostream& operator<<(std::ostream& os, const Buffer& buffer); 
+
   void bind(float val);
   void bind(vec2& vec);
   void bind(vec3& vec); 
@@ -35,7 +37,7 @@ public:
 
 protected:
   size_t rawIndex = 0; // index of the next float
-  size_t itemSize; // floats in each value
+  const size_t itemSize; // floats in each value
   std::vector<float> data; // raw data
 
   void bind(const std::vector<float> vals);

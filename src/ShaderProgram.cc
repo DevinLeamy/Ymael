@@ -8,11 +8,11 @@
 
 void ShaderProgram::runShaderPrepare(Shader* shader, int itemCount) {
   outStream = std::make_unique<VertexArrayObject>();
-  std::map<int, int> outputBuffersMap = shader->getOutputBufferMap();
+  std::map<size_t, size_t> outputBuffersMap = shader->getOutputBufferMap();
 
   for (auto& [attrIndex, itemSize] : outputBuffersMap)
     // TODO: fix memory leak from buffers
-    outStream->bind(new VertexBufferObject { (size_t) itemCount, (size_t) itemSize }, attrIndex);
+    outStream->bind(new VertexBufferObject { (size_t) itemCount, itemSize }, attrIndex);
 }
 
 void ShaderProgram::runShaderCleanup(Shader* shader, int itemCount) {}

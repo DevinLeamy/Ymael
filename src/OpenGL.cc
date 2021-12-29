@@ -3,12 +3,12 @@
 #include "OpenGL.h"
 #include "VertexArrayObject.h"
 #include "utility.h"
-// #include "CursesScreen.h"
-#include "Screen.h"
+#include "CursesScreen.h"
+// #include "Screen.h"
 
 OpenGL::OpenGL() {
   rasterizer = std::make_unique<Rasterizer>();
-  screen = std::make_unique<Screen>(WW, WH);
+  screen = std::make_unique<CursesScreen>(CONST::WW, CONST::WH);
 }
 
 void OpenGL::bind(VertexArrayObject* vao) { this->vao = vao; }
@@ -34,19 +34,32 @@ void OpenGL::draw(const std::vector<std::vector<int>>& indices) {
 
 void OpenGL::doDraw() {
   std::unique_ptr<VertexArrayObject> fragmentBuffers = std::make_unique<VertexArrayObject>();
-  int bufferSize = WH * WW;
+  int bufferSize = CONST::WH * CONST::WW;
   int outputBufferSize;
 
   // create rasterizer/fragment shader output/input buffers 
   DEBUG("CREATE RASTERIZER OUTPUT BUFFERS");
   VertexArrayObject* outputVAO = sProgram->getOutputVAO();
+
+  PRINT(*outputVAO);
+  
+  /*
+  Note:
+  This assumes that the output buffers from the vertex shader are equivalent
+  (as far as the attr->itemSize of each buffer) to the input buffer of the 
+  fragment shader.
+
+  In other words, the rasterizer should only change the number of items  
+  in each buffer, and nothing else.
+  */
+
   for (int attrIndex : outputVAO->getEnabledAttributes()) {
     VertexBufferObject* outputBuffer = outputVAO->getAttributeBuffer(attrIndex);
     VertexBufferObject* fragmentBuffer = new VertexBufferObject(bufferSize, outputBuffer->getItemSize());
 
     outputBufferSize = outputBuffer->getSize();
 
-    outputVAO->bind(fragmentBuffer, attrIndex);
+    fragmentBuffers->bind(fragmentBuffer, attrIndex);
   }
 
   DEBUG("RASTERIZE TRIANGLES");
@@ -64,6 +77,7 @@ void OpenGL::doDraw() {
 
   DEBUG("ACCESS FS OUTPUT BUFFERS");
   outputVAO = sProgram->getOutputVAO();
+  DEBUG(*outputVAO);
 
   VertexBufferObject *screenCoordB = outputVAO->getAttributeBuffer(0);
   VertexBufferObject *colourB = outputVAO->getAttributeBuffer(1);
@@ -76,11 +90,12 @@ void OpenGL::doDraw() {
     screenCoordB->get(i, screenCoord);
     colourB->get(i, colour);
 
+    // PRINTLN(i);
     screen->loadFragment(screenCoord, colour);
   }
 
   DEBUG("DRAW TO SCREEN");
-  // screen->draw();
+  screen->draw();
 }
 
 const std::unique_ptr<OpenGL> GL = std::make_unique<OpenGL>();

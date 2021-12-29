@@ -11,6 +11,19 @@ void VertexArrayObject::bind(VertexBufferObject *vbo, int attrIndex) {
   attributes[attrIndex] = vbo;
 }
 
+std::ostream& operator<<(std::ostream& os, VertexArrayObject& vao) {
+  os << "(vao) attributes: " << vao.getEnabledAttributes().size() << std::endl; 
+  os << "------" << std::endl;
+
+  std::vector<int> attrIndices = vao.getEnabledAttributes();
+
+  for (int attr : attrIndices)
+    os << "attribute(" << attr << ") " << *vao.getAttributeBuffer(attr);
+  os << "------" << std::endl;
+
+  return os;
+}
+
 bool VertexArrayObject::attributeEnabled(int attrIndex) const {
   return attributes.count(attrIndex) > 0;
 }

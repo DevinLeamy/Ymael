@@ -21,15 +21,14 @@ Camera camera;
 
 int main() {
   Transform modelTransform {
-    .position = vec3(10, 0, 0),
+    .position = vec3(0, 0, 0),
     .rotation = vec3(0, 0, 0),
     .scale = vec3(20, 20, 20)
   };
 
   // load model
   DEBUG("LOAD MODEL");
-  std::unique_ptr<Model> model { loadModel("res/cube.obj") };
-
+  std::unique_ptr<Model> model { loadModel("res/B.obj") };
   // create vao
   DEBUG("CREATE VAO");
   VertexArrayObject *vao = new VertexArrayObject(); 
@@ -57,6 +56,8 @@ int main() {
   vao->bind(uvs);
   vao->bind(normals);
 
+  PRINT(*vao);
+
   // create shader program
   DEBUG("CREATE SHADER PROGRAM");
   ShaderProgram* sProgram = new ShaderProgram();
@@ -82,7 +83,9 @@ int main() {
 
   // draw triangles
   DEBUG("DRAW TRIANGLES");
+
   GL->draw(model->getIndices());
+  while(1);
 
   DEBUG("RENDER COMPLETE");
 

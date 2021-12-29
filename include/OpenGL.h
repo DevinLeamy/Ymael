@@ -1,22 +1,19 @@
 #pragma once
 
-#include "Rasterizer.h"
-#include "Screen.h"
-
-/*
-OpenGL simulator;
-*/
-
 #include <memory>
 
+#include "Rasterizer.h"
+#include "Screen.h"
 #include "VertexArrayObject.h"
 #include "ShaderProgram.h"
 
-class OpenGL {
-public:
+namespace CONST {
   const size_t WW = 800;
   const size_t WH = 800;
+}
 
+class OpenGL {
+public:
   OpenGL(); 
   ~OpenGL() = default;
 

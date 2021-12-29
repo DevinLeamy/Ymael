@@ -9,6 +9,12 @@ Buffer::Buffer(size_t itemCnt, size_t itemSize): itemSize{itemSize},
 
 Buffer::Buffer(std::vector<float> data, size_t itemSize): itemSize{itemSize}, data{data} {}
 
+std::ostream& operator<<(std::ostream& os, const Buffer& buffer) {
+  os << "(buffer) items: " << buffer.getSize() << " itemSize: " << buffer.getItemSize() << std::endl;
+
+  return os;
+}
+
 void Buffer::bind(float val) { data[rawIndex++] = val; }
 void Buffer::bind(vec2& vec) { bind(vec.toVector()); }
 void Buffer::bind(vec3& vec) { bind(vec.toVector()); }

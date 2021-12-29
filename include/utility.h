@@ -1,10 +1,10 @@
 #include <iostream>
 #include <algorithm>
 
-#define PRINTLN(x) std::cout << x << std::endl; 
-#define PRINT(x) std::cout << x; 
+#define PRINTLN(x) ; //std::cout << x << std::endl
+#define PRINT(x) ; // std::cout << x
 
-#define DEBUG(x) if (true) std::cout << "DEBUG: " << x << std::endl;
+#define DEBUG(x) if (false) std::cout << "DEBUG: " << x << std::endl
 
 #define TYPE_NAME(T) std::string(typeid(T).name())
 

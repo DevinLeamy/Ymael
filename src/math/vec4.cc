@@ -7,7 +7,7 @@
 #include "math/vec4.h"
 
 vec4::vec4(const std::vector<float>& vals): x{vals[0]}, y{vals[1]}, 
-  w{vals[2]}, z{vals[3]} 
+  z{vals[2]}, w{vals[3]} 
 {}
 
 vec4::vec4(float x, float y, float z, float w): x{x}, y{y}, z{z}, w{w} {}

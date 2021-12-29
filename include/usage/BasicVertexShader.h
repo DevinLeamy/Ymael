@@ -23,7 +23,7 @@ public:
 
     vec4 glPos; // out
 
-    DEBUG("SET VERTEX SHADER INPUTS");
+    // DEBUG("SET VERTEX SHADER INPUTS");
     inStream->getAttributeBuffer(0)->get(attrIndices[0], pos);
     inStream->getAttributeBuffer(1)->get(attrIndices[1], uv);
     inStream->getAttributeBuffer(2)->get(attrIndices[2], normals);
@@ -35,7 +35,7 @@ public:
     PRINTLN(glPos);
 
     // store a position
-    DEBUG("SET VERTEX SHADER OUTPUTS");
+    // DEBUG("SET VERTEX SHADER OUTPUTS");
     outStream->getAttributeBuffer(0)->bind(glPos);
     outStream->getAttributeBuffer(1)->bind(uv);
   }

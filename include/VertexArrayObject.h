@@ -3,6 +3,7 @@
 #include <map>
 #include <any>
 #include <cassert>
+#include <iostream>
 
 #include "VertexBufferObject.h"
 
@@ -17,6 +18,8 @@ public:
 
   void bind(VertexBufferObject *vbo);
   void bind(VertexBufferObject *vbo, int attrIndex);
+
+  friend std::ostream& operator<<(std::ostream& os, VertexArrayObject& vao);
 
   VertexBufferObject *getAttributeBuffer(int attrIndex); 
 

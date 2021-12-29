@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cmath>
 
 #include "Rasterizer.h"
 #include "VertexArrayObject.h"
@@ -20,7 +21,7 @@ int Rasterizer::rasterize(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int 
   int fragments = 0;
 
   for (int i = 0; i < vertices; i += 3) {
-    DEBUG("RASTERIZE TRIANGLE");
+    // DEBUG("RASTERIZE TRIANGLE");
     fragments += interpolate(vVAO, fVAO, i);
   }
 
@@ -37,16 +38,37 @@ size_t interpolate(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int vIndex)
   vVAO->getAttributeBuffer(0)->get(vIndex + 1, v1);
   vVAO->getAttributeBuffer(0)->get(vIndex + 2, v2);
 
+  PRINT(v0 << v1 << v2);
+
   std::vector<vec2> coveredPixels = getCoveredPixels(v0, v1, v2);
 
   std::vector<int> attrIndices = vVAO->getEnabledAttributes();
 
   for (vec2 pixel : coveredPixels) {
-    vec3 bCoords = getBarycentricCoords(pixel, v0, v1, v2);
+    vec3 bCoords;
+    try {
+      bCoords = getBarycentricCoords(pixel, v0, v1, v2);
+    } catch (...) { continue; }
 
     for (int attrIndex : attrIndices) {
       VertexBufferObject* inVBO = vVAO->getAttributeBuffer(attrIndex);
       VertexBufferObject* outVBO = fVAO->getAttributeBuffer(attrIndex);
+
+      // position 
+      if (attrIndex == 0) {
+        vec4 p0, p1, p2;
+
+        inVBO->get(vIndex, p0);
+        inVBO->get(vIndex, p1);
+        inVBO->get(vIndex, p2);
+
+        float interpolatedZ = bCoords.x * p0.z + bCoords.y * p1.z + bCoords.z * p2.z;
+
+        vec4 newPos(pixel.x, pixel.y, interpolatedZ, 1.0);
+
+        outVBO->bind(newPos);
+        continue;
+      }
 
       size_t itemSize = inVBO->getItemSize();
 
@@ -73,18 +95,19 @@ std::vector<vec2> getCoveredPixels(const vec4& p1, const vec4& p2, const vec4& p
   std::vector<vec2> covered;
 
   // PRINT(p1 << p2 << p3);
+  PRINT(p1);
 
-  int minX = std::clamp<int>(std::min({p1.x, p2.x, p3.x}), 0, GL->WW);
-  int maxX = std::clamp<int>(std::max({p1.x, p2.x, p3.x}), 0, GL->WW);
+  int minX = std::clamp<int>(std::min({p1.x, p2.x, p3.x}), 0, CONST::WW);
+  int maxX = std::clamp<int>(std::max({p1.x, p2.x, p3.x}), 0, CONST::WW);
 
-  int minY = std::clamp<int>(std::min({p1.y, p2.y, p3.y}), 0, GL->WH);
-  int maxY = std::clamp<int>(std::max({p1.y, p2.y, p3.y}), 0, GL->WH);
+  int minY = std::clamp<int>(std::min({p1.y, p2.y, p3.y}), 0, CONST::WH);
+  int maxY = std::clamp<int>(std::max({p1.y, p2.y, p3.y}), 0, CONST::WH);
 
   for (int i = minX; i < maxX; ++i) {
     bool wasInside = false;
 
     for (int j = minY; j < maxY; ++j) {
-      vec2 point{(float) i, (float) j};
+      vec2 point{i + 0.5f, j + 0.5f};
 
       if (insideTriangle(point, p1, p2, p3)) {
         covered.push_back(point);
@@ -133,20 +156,26 @@ bool isLeftOrTopEdge(const vec4& v0, const vec4& v1, const vec4& other) {
 }
 
 vec3 getBarycentricCoords(const vec2& p, const vec4& v0, const vec4& v1, const vec4& v2) {
-  vec2 p0{v0.x, v1.y}, p1{v1.x, v1.y}, p2{v2.x, v2.y};
+  vec2 p0{v0.x, v0.y}, p1{v1.x, v1.y}, p2{v2.x, v2.y};
 
   float totalArea = getTriangleArea(p0, p1, p2);
 
-  float b0 = getTriangleArea(p, p1, p2) / totalArea;
-  float b1 = getTriangleArea(p, p0, p2) / totalArea;
-  float b2 = getTriangleArea(p, p1, p2) / totalArea;
+  if (totalArea == 0) 
+    throw 1;
 
-  assert(b0 + b1 + b2 == 1);
+  float b0 = getTriangleArea(p, p0, p1) / totalArea;
+  float b1 = getTriangleArea(p, p1, p2) / totalArea;
+  float b2 = getTriangleArea(p, p2, p0) / totalArea;
+
+  assert(b0 >= 0 && b1 >= 0 && b2 >= 0);
+
+  // PRINTLN(b0 + b1 + b2 << " " << totalArea);
+  // assert(abs((b0 + b1 + b2) - 1.0f) < 0.01f);
 
   return vec3{b0, b1, b2};
 }
 
 float getTriangleArea(const vec2& v0, const vec2& v1, const vec2& v2) {
   // https://ncalculators.com/geometry/triangle-area-by-3-points.htm
-  return (1/2) * (v0.x * (v1.y - v2.y) + v1.x * (v2.y - v0.y) + v2.x * (v0.y - v1.y));
+  return abs(v0.x * (v1.y - v2.y) + v1.x * (v2.y - v0.y) + v2.x * (v0.y - v1.y)) * 0.5;
 }

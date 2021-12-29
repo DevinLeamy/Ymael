@@ -1,4 +1,5 @@
 #include "CursesScreen.h"
+#include <iostream>
 
 CursesScreen::CursesScreen(size_t WW, size_t WH): Screen { WW, WH } {
   initscr();
