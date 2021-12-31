@@ -1,108 +1,76 @@
 #include <memory>
 
 #include "OpenGL.h"
-#include "VertexArrayObject.h"
 #include "utility.h"
 #include "CursesScreen.h"
 #include "Screen.h"
+#include "Vertex.h"
+#include "GTriangle.h"
 
 OpenGL::OpenGL() {
   rasterizer = std::make_unique<Rasterizer>();
-  // screen = std::make_unique<CursesScreen>(CONST::WW, CONST::WH);
-  screen = std::make_unique<Screen>(CONST::WW, CONST::WH);
+  screen = std::make_unique<CursesScreen>(CONST::WW, CONST::WH);
+  // screen = std::make_unique<Screen>(CONST::WW, CONST::WH);
 }
 
-void OpenGL::bind(VertexArrayObject* vao) { this->vao = vao; }
 void OpenGL::bind(ShaderProgram* sProgram) { this->sProgram = sProgram; }
 
-void OpenGL::draw(int vertices) {
+void OpenGL::render(const std::vector<Vertex*>& vertices) {
+  // (1) run the vertex shader 
   DEBUG("RUN VERTEX SHADER");
-  sProgram->setInputVAO(vao);
-  sProgram->runShader<VertexShader>(vertices);
+  std::vector<std::unique_ptr<Vertex>> tVertices; // t = transformed 
 
-  // everything beyond the vertex shader
-  doDraw();
-}
+  for (auto inVertex : vertices) {
+    std::unique_ptr<Vertex> outVertex = std::make_unique<Vertex>(); 
 
-void OpenGL::draw(const std::vector<std::vector<int>>& indices) {
-  DEBUG("RUN VERTEX SHADER");
-  sProgram->setInputVAO(vao);
-  sProgram->runShader<VertexShader>(indices);
-
-  // everything beyond the vertex shader
-  doDraw();
-}
-
-void OpenGL::doDraw() {
-  // TODO: make this a static buffer?
-  static std::unique_ptr<VertexArrayObject> fragmentBuffers = std::make_unique<VertexArrayObject>();
-  int bufferSize = CONST::WH * CONST::WW;
-  int outputBufferSize;
-
-  // create rasterizer/fragment shader output/input buffers 
-  DEBUG("CREATE RASTERIZER OUTPUT BUFFERS");
-  VertexArrayObject* outputVAO = sProgram->getOutputVAO();
-
-  PRINT(*outputVAO);
-
-  rasterizer->setVSOutBuffers(outputVAO);
-  rasterizer->setFSInBuffers(fragmentBuffers.get());
+    sProgram->runShader<VertexShader>(inVertex, outVertex.get());
+    tVertices.push_back(std::move(outVertex));
+  }
   
-  /*
-  Note:
-  This assumes that the output buffers from the vertex shader are equivalent
-  (as far as the attr->itemSize of each buffer) to the input buffer of the 
-  fragment shader.
+  // (2) run the primitive assembly
+  DEBUG("RUN PRIMITIVE ASSEMBLY");
+  std::vector<std::unique_ptr<GTriangle>> triangles = primitiveAssembly(tVertices);
 
-  In other words, the rasterizer should only change the number of items  
-  in each buffer, and nothing else.
-  */
+  for (size_t i = 0; i < triangles.size(); ++i) {
+    // (3) run the rasterizer
+    DEBUG("RUN RASTERIZER");
+    std::vector<std::unique_ptr<Fragment>> fragments = rasterizer->rasterize(triangles[i].get());
 
-  for (int attrIndex : outputVAO->getEnabledAttributes()) {
-    VertexBufferObject* outputBuffer = outputVAO->getAttributeBuffer(attrIndex);
-    VertexBufferObject* fragmentBuffer = new VertexBufferObject(bufferSize, outputBuffer->getItemSize());
+    // (4) run the fragment shader
+    DEBUG("RUN FRAGMENT SHADER");
+    std::vector<std::unique_ptr<Fragment>> tFragments;
+    for (size_t j = 0; j < fragments.size(); ++j) {
+      std::unique_ptr<Fragment> outFragment = std::make_unique<Fragment>();
 
-    outputBufferSize = outputBuffer->getSize();
+      sProgram->runShader<FragmentShader>(fragments[j].get(), outFragment.get());
+      tFragments.push_back(std::move(outFragment));
+    }
 
-    fragmentBuffers->bind(fragmentBuffer, attrIndex);
+    // (5) load pixels into the frame buffer
+    DEBUG("LOAD FRAGMENTS");
+    for (size_t j = 0; j < tFragments.size(); ++j)
+      screen->loadFragment(tFragments[j].get());
   }
 
-  DEBUG("RASTERIZE TRIANGLES");
-  rasterizer->rasterize(outputBufferSize);
-
-  size_t fragments = rasterizer->getFragmentCount();
-
-  DEBUG("FRAGMENT COUNT: " << fragments);
-
-  // TODO: view transform
-
-  DEBUG("RUN FRAGMENT SHADER");
-  sProgram->setInputVAO(fragmentBuffers.get());
-  sProgram->runShader<FragmentShader>(fragments);
-
-  DEBUG("ACCESS FS OUTPUT BUFFERS");
-  outputVAO = sProgram->getOutputVAO();
-  DEBUG(*outputVAO);
-
-  VertexBufferObject *screenCoordB = outputVAO->getAttributeBuffer(0);
-  VertexBufferObject *colourB = outputVAO->getAttributeBuffer(1);
-
-  DEBUG("LOAD FRAGMENTS INTO SCREEN BUFFERS");
-  for (size_t i = 0; i < fragments; ++i) {
-    vec3 screenCoord;
-    vec3 colour;
-
-    screenCoordB->get(i, screenCoord);
-    colourB->get(i, colour);
-
-    // PRINTLN(i);
-    screen->loadFragment(screenCoord, colour);
-  }
-
-  DEBUG("DRAW TO SCREEN");
+  // (6) display the screen
+  DEBUG("DISPLAY");
   screen->draw();
+}
 
-  DEBUG("RENDER COMPLETE");
+std::vector<std::unique_ptr<GTriangle>> OpenGL::primitiveAssembly(const std::vector<std::unique_ptr<Vertex>>& vertices) {
+  size_t triangleCount = vertices.size() / 3;
+  std::vector<std::unique_ptr<GTriangle>> triangles;
+
+  for (size_t i = 0; i < triangleCount; ++i) {
+    Vertex *v0 = vertices[i * 3 + 0].get();
+    Vertex *v1 = vertices[i * 3 + 1].get();
+    Vertex *v2 = vertices[i * 3 + 2].get();
+
+    std::unique_ptr<GTriangle> triangle = std::make_unique<GTriangle>(v0, v1, v2);
+    triangles.push_back(std::move(triangle));
+  }
+
+  return std::move(triangles);
 }
 
 const std::unique_ptr<OpenGL> GL = std::make_unique<OpenGL>();

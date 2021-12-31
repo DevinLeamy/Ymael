@@ -6,6 +6,7 @@
 class BasicFragmentShader: public FragmentShader {
 public:
   BasicFragmentShader(): FragmentShader {} {
+    // TODO: remove? 
     inputBufferMap[0] = 4; // pos 
     inputBufferMap[1] = 2; // uvs
 
@@ -15,22 +16,24 @@ public:
 
   ~BasicFragmentShader() = default;
 
-  void run(VertexArrayObject *inStream, VertexArrayObject *outStream, std::vector<int> attrIndices) override {
+  void run(GraphicsObject* fragmentIn, GraphicsObject* fragmentOut) {
     std::string shades = ".o*";
 
-    vec4 pos; // in
-    vec2 uvs; // in
+    // in
+    vec4 pos; 
+    vec2 uvs; 
 
-    vec3 screenCoord; // out
-    vec3 colour; // out
+    // out
+    vec3 screenCoord; 
+    vec3 colour; 
 
-    inStream->getAttributeBuffer(0)->get(attrIndices[0], pos);
-    inStream->getAttributeBuffer(1)->get(attrIndices[1], uvs);
+    fragmentIn->get(0, pos);
+    fragmentIn->get(1, uvs);
 
     screenCoord = vec3(pos.x, pos.y, pos.z);
     colour = vec3(std::min(1.0f, uvs.length()) * 8.0f, 100, 100);
 
-    outStream->getAttributeBuffer(0)->bind(screenCoord);
-    outStream->getAttributeBuffer(1)->bind(colour);
+    fragmentOut->set(0, screenCoord);
+    fragmentOut->set(1, colour);
   }
 };

@@ -4,13 +4,13 @@
 #include <vector>
 #include <map>
 
-#include "VertexArrayObject.h"
+#include "GraphicsObject.h"
 
 class Shader {
 public:
   Shader() = default;
   virtual ~Shader() = default;
-  virtual void run(VertexArrayObject* inStream, VertexArrayObject* outStream, std::vector<int> attrIndices) = 0;
+  virtual void run(GraphicsObject* inGO, GraphicsObject* outGO) = 0;
 
   const std::map<size_t, size_t>& getInputBufferMap() const; 
   const std::map<size_t, size_t>& getOutputBufferMap() const; 

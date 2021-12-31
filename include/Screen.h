@@ -5,6 +5,7 @@
 #include "FrameBuffer.h"
 #include "DepthBuffer.h"
 #include "math/math.h"
+#include "Fragment.h"
 
 class Screen {
 public:
@@ -13,6 +14,7 @@ public:
   // TODO: make pure virtual
   virtual void draw() {};
 
+  void loadFragment(Fragment *);
   void loadFragment(vec3 coord, vec3 colour); 
 
   virtual ~Screen() = default;

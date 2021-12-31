@@ -1,4 +1,3 @@
-#include "VertexArrayObject.h"
 #include "shaders/Shader.h"
 
 const std::map<size_t, size_t>& Shader::getInputBufferMap() const {

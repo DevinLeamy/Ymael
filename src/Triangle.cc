@@ -6,6 +6,7 @@
 #include "BoundingBox.h"
 #include "OpenGL.h"
 
+Triangle::Triangle() {}
 Triangle::Triangle(const vec2& a, const vec2& b, const vec2& c): a{a}, b{b}, c{c} {}
 
 vec3 Triangle::getBarycentricCoords(const vec2& point) const {
@@ -47,8 +48,8 @@ BoundingBox Triangle::getBoundingBox() const {
   }; 
 }
 
-std::vector<vec2> Triangle::getCoveredPoints(const Triangle& triangle, const BoundingBox& bbox) {
-  BoundingBox triangleBBox = triangle.getBoundingBox();
+std::vector<vec2> Triangle::getCoveredPoints(Triangle* triangle, const BoundingBox& bbox) {
+  BoundingBox triangleBBox = triangle->getBoundingBox();
 
   int minX = std::max(triangleBBox.minX, bbox.minX);
   int maxX = std::min(triangleBBox.maxX, bbox.maxX);
@@ -70,7 +71,7 @@ std::vector<vec2> Triangle::getCoveredPoints(const Triangle& triangle, const Bou
       if (point.x <= 0 || point.x >= CONST::WW)
         assert(false);
 
-      if ((triangleContainsPnt = triangle.containsPoint(pointCenter))) {
+      if ((triangleContainsPnt = triangle->containsPoint(pointCenter))) {
         covered.push_back(point);
         prevWasCovered = true;
       }

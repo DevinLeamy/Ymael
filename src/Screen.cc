@@ -4,15 +4,16 @@
 #include "Screen.h"
 #include "utility.h"
 
-Screen::Screen(size_t WW, size_t WH): WW{WW}, WH{WH},
-  FB{std::make_unique<FrameBuffer>()},
-  DB{std::make_unique<DepthBuffer>()} 
+Screen::Screen(size_t WW, size_t WH): FB{std::make_unique<FrameBuffer>()},
+  DB{std::make_unique<DepthBuffer>()}, WW{WW}, WH{WH}
 {}
+
+void Screen::loadFragment(Fragment* fragment) {
+  loadFragment(fragment->getPosition(), fragment->getColor());
+}
 
 void Screen::loadFragment(vec3 coord, vec3 colour) {
   size_t bufferIndex = (size_t) (coord.y * WH + coord.x);
-
-  // PRINTLN(coord << " " << bufferIndex);
 
   float curDepth;
   float newDepth = coord.z;

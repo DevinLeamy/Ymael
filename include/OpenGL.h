@@ -4,8 +4,9 @@
 
 #include "Rasterizer.h"
 #include "Screen.h"
-#include "VertexArrayObject.h"
 #include "ShaderProgram.h"
+#include "Vertex.h"
+#include "GTriangle.h"
 
 namespace CONST {
   const size_t WW = 400;
@@ -17,17 +18,15 @@ public:
   OpenGL(); 
   ~OpenGL() = default;
 
-  void bind(VertexArrayObject* vao);
   void bind(ShaderProgram* sProgram);
 
-  void draw(int vertices);
-  void draw(const std::vector<std::vector<int>>& indices);
+  void render(const std::vector<Vertex*>& vertices);
 
 private:
   void doDraw();
+  std::vector<std::unique_ptr<GTriangle>> primitiveAssembly(const std::vector<std::unique_ptr<Vertex>>& vertices);
   std::unique_ptr<Rasterizer> rasterizer;
   std::unique_ptr<Screen> screen;
-  VertexArrayObject* vao;
   ShaderProgram* sProgram; 
 };
 
