@@ -8,8 +8,8 @@
 
 OpenGL::OpenGL() {
   rasterizer = std::make_unique<Rasterizer>();
-  screen = std::make_unique<CursesScreen>(CONST::WW, CONST::WH);
-  // screen = std::make_unique<Screen>(CONST::WW, CONST::WH);
+  // screen = std::make_unique<CursesScreen>(CONST::WW, CONST::WH);
+  screen = std::make_unique<Screen>(CONST::WW, CONST::WH);
 }
 
 void OpenGL::bind(VertexArrayObject* vao) { this->vao = vao; }

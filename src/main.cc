@@ -20,7 +20,7 @@
 Camera camera(vec3(0, 0, 0), vec3(0, 0, 1), vec3(0, 1, 0));
 
 int main() {
-  WorldTransform modelWT(vec3(80, 40, 0), vec3(0, 0, 0), 20.0f);
+  WorldTransform modelWT(vec3(40, 40, 0), vec3(0, 0, 0), 10.0f);
 
   // load model
   DEBUG("LOAD MODEL");
@@ -56,12 +56,13 @@ int main() {
   DEBUG("DRAW TRIANGLES");
 
   GL->draw(model->getIndices());
-  while(1) {
-    modelWT.rotate(vec3(0, 0, 0));
-    // modelTransform.rotation.x += 10;
-    vs->setUniform(MODEL_MATRIX, modelWT.toMatrix());
-    GL->draw(model->getIndices());
-  }
+  while (1);
+  // while(1) {
+  //   modelWT.rotate(vec3(0, 0, 0));
+  //   // modelTransform.rotation.x += 10;
+  //   vs->setUniform(MODEL_MATRIX, modelWT.toMatrix());
+  //   GL->draw(model->getIndices());
+  // }
 
   DEBUG("RENDER COMPLETE");
 }

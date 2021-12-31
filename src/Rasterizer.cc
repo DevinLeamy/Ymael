@@ -15,8 +15,8 @@ void Rasterizer::rasterize(size_t vertices) {
   assert(vertices % 3 == 0);
 
   // TODO: should be moved elsewhere
-  // divideByW();
-  // viewportTransform();
+  divideByW();
+  viewportTransform();
 
   size_t triangles = vertices / 3;
 

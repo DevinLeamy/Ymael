@@ -19,7 +19,8 @@ class mat4 {
     vec4 operator*(const vec4 &right) const; 
     mat4 operator*(const mat4 &right) const;
 
-    // const std::vector<float> &toVector() const;
+    mat4& transpose();
+    mat4& invert();
 
     static mat4 scaleM(float x, float y, float z);
     static mat4 translationM(float x, float y, float z);
@@ -27,19 +28,3 @@ class mat4 {
 
     ~mat4() = default;
 };
-
-/*
-Translation matrices:
-[
- [1, 0, 0, X],
- [0, 1, 0, Y],
- [0, 0, 1, Z],
- [0, 0, 0, 1]
-]
-- Adds X, Y, Z to your position
-
-
-
-Cumulating transformations:
-TransformedVector = TranslationMatrix * RotationMatrix * ScaleMatrix * OriginalVector;
-*/
