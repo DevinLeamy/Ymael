@@ -6,172 +6,134 @@
 #include "math/math.h"
 #include "OpenGL.h"
 #include "utility.h"
+#include "Triangle.h"
+#include "BoundingBox.h"
 
-size_t interpolate(VertexArrayObject*, VertexArrayObject*, int);
-std::vector<vec2> getCoveredPixels(const vec4&, const vec4&, const vec4&);
-bool edgeFunction(const vec4&, const vec4&, const vec4&);
-bool insideTriangle(const vec2&, const vec4&, const vec4&, const vec4&);
-bool isLeftOrTopEdge(const vec4&, const vec4&, const vec4&);
-vec3 getBarycentricCoords(const vec2&, const vec4&, const vec4&, const vec4&);
-float getTriangleArea(const vec2&, const vec2&, const vec2&);
+Rasterizer::Rasterizer() {}
 
-int Rasterizer::rasterize(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int vertices) {
+void Rasterizer::rasterize(size_t vertices) {
   assert(vertices % 3 == 0);
 
-  int fragments = 0;
+  // TODO: should be moved elsewhere
+  // divideByW();
+  // viewportTransform();
 
-  for (int i = 0; i < vertices; i += 3) {
-    // DEBUG("RASTERIZE TRIANGLE");
-    fragments += interpolate(vVAO, fVAO, i);
-  }
+  size_t triangles = vertices / 3;
 
-  return fragments;
+  PRINT(*vsOutBuffers << *fsInBuffers);
+
+  for (int i = 0; i < triangles; ++i) 
+    rasterizeTriangle(i * 3); // i * 3 (index of the 1st vertex)
 };
 
-// vIndex == index of the first vertex
-size_t interpolate(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int vIndex) {
-  // vertices of the triangle are [vIndex, vIndex + 1, vIndex + 2]
-  // assumes position is the first attribute
-  vec4 v0, v1, v2;
+// prospective division
+void Rasterizer::divideByW() {
+  VertexBufferObject *positions = vsOutBuffers->getAttributeBuffer(0);
 
-  vVAO->getAttributeBuffer(0)->get(vIndex, v0);
-  vVAO->getAttributeBuffer(0)->get(vIndex + 1, v1);
-  vVAO->getAttributeBuffer(0)->get(vIndex + 2, v2);
+  vec4 glPos;
+  for (size_t i = 0; i < positions->getSize(); ++i) {
+    positions->get(i, glPos);
 
-  std::vector<vec2> coveredPixels = getCoveredPixels(v0, v1, v2);
+    float w = glPos.w;
+    if (w != 0.0f) {
+      glPos.x /= w;
+      glPos.y /= w;
+      glPos.z /= w;
 
-  std::vector<int> attrIndices = vVAO->getEnabledAttributes();
+      positions->set(i, glPos);
+    }
+  }
+}
 
-  for (vec2 pixel : coveredPixels) {
-    vec3 bCoords;
-    try {
-      bCoords = getBarycentricCoords(pixel, v0, v1, v2);
-    } catch (...) { continue; }
+// [-1, 1] -> [0, WW/WH]
+void Rasterizer::viewportTransform() {
+  VertexBufferObject *positions = vsOutBuffers->getAttributeBuffer(0);
 
-    for (int attrIndex : attrIndices) {
-      VertexBufferObject* inVBO = vVAO->getAttributeBuffer(attrIndex);
-      VertexBufferObject* outVBO = fVAO->getAttributeBuffer(attrIndex);
+  vec4 glPos;
+  for (size_t i = 0; i < positions->getSize(); ++i) {
+    positions->get(i, glPos);
+    // assert(glPos.x >= -1 && glPos.x <= 1);
+    // assert(glPos.y >= -1 && glPos.y <= 1);
 
+    PRINT(glPos);
+
+    glPos.x = ((glPos.x + 1.0f) * CONST::WW) / 2.0f;
+    glPos.y = ((glPos.y + 1.0f) * CONST::WH) / 2.0f;
+    
+    PRINTLN(glPos);
+
+    positions->set(i, glPos);
+  }
+}
+
+void Rasterizer::rasterizeTriangle(size_t v0Index) {
+  Triangle triangle = getTriangle(v0Index);
+
+  if (triangle.area() == 0.0f) return;
+
+  BoundingBox windowBBox{
+    .minX = 0, .maxX = CONST::WW,
+    .minY = 0, .maxY = CONST::WH
+  };
+  
+  std::vector<vec2> coveredPoints = Triangle::getCoveredPoints(triangle, windowBBox);
+  fragmentCount += coveredPoints.size();
+
+  for (const vec2& point : coveredPoints) {
+    assert(point.x >= 0 && point.x <= CONST::WW);
+    assert(point.y >= 0 && point.y <= CONST::WH);
+    for (int attrIndex : vsOutBuffers->getEnabledAttributes()) {
       // position 
       if (attrIndex == 0) {
+        VertexBufferObject* inVBO = vsOutBuffers->getAttributeBuffer(attrIndex);
+        VertexBufferObject* outVBO = fsInBuffers->getAttributeBuffer(attrIndex);
+
+
         vec4 p0, p1, p2;
 
-        inVBO->get(vIndex, p0);
-        inVBO->get(vIndex, p1);
-        inVBO->get(vIndex, p2);
+        inVBO->get(v0Index, p0);
+        inVBO->get(v0Index, p1);
+        inVBO->get(v0Index, p2);
 
-        float interpolatedZ = bCoords.x * p0.z + bCoords.y * p1.z + bCoords.z * p2.z;
+        vec3 vals(p0.z, p1.z, p2.z);
 
-        vec4 newPos(pixel.x, pixel.y, interpolatedZ, 1.0);
+        float interpolatedZ = triangle.interpolateFloat(vals, point);
+
+        vec4 newPos(point.x, point.y, interpolatedZ, 1.0);
 
         outVBO->bind(newPos);
-        continue;
-      }
-
-      size_t itemSize = inVBO->getItemSize();
-
-      for (size_t i = 0; i < itemSize; ++i) {
-        float f0 = inVBO->getRawFloat(itemSize * (vIndex + 0) + i);
-        float f1 = inVBO->getRawFloat(itemSize * (vIndex + 1) + i);
-        float f2 = inVBO->getRawFloat(itemSize * (vIndex + 2) + i);
-
-        float interpolated = bCoords.x * f0 + bCoords.y * f1 + bCoords.z * f2;
-
-        outVBO->bind(interpolated);
+      } else {
+        interpolateAttribute(v0Index, attrIndex, point, triangle);
       }
     }
   }
-
-  for (vec2 pixel : coveredPixels)
-    PRINT("Covered: " << pixel);
-
-  return coveredPixels.size();
 }
 
-// TODO: optimize
-std::vector<vec2> getCoveredPixels(const vec4& p1, const vec4& p2, const vec4& p3) {
-  std::vector<vec2> covered;
+Triangle Rasterizer::getTriangle(size_t v0Index) const {
+  vec4 v0, v1, v2;
 
-  PRINT("95: " << p1 << p2 << p3);
+  vsOutBuffers->getAttributeBuffer(0)->get(v0Index + 0, v0);
+  vsOutBuffers->getAttributeBuffer(0)->get(v0Index + 1, v1);
+  vsOutBuffers->getAttributeBuffer(0)->get(v0Index + 2, v2);
 
-  int minX = std::clamp<int>(std::min({p1.x, p2.x, p3.x}), 0, CONST::WW);
-  int maxX = std::clamp<int>(std::max({p1.x, p2.x, p3.x}), 0, CONST::WW);
+  return Triangle(vec2(v0.x, v0.y), vec2(v1.x, v1.y), vec2(v2.x, v2.y));
+}
 
-  int minY = std::clamp<int>(std::min({p1.y, p2.y, p3.y}), 0, CONST::WH);
-  int maxY = std::clamp<int>(std::max({p1.y, p2.y, p3.y}), 0, CONST::WH);
+void Rasterizer::interpolateAttribute(size_t v0Index, size_t attrIndex, const vec2& point, const Triangle& triangle) {
+  VertexBufferObject *inBuffer = vsOutBuffers->getAttributeBuffer(attrIndex);
+  VertexBufferObject *outBuffer = fsInBuffers->getAttributeBuffer(attrIndex);
 
-  for (int i = minX; i < maxX; ++i) {
-    bool wasInside = false;
+  size_t attributeSize = inBuffer->getItemSize();
 
-    for (int j = minY; j < maxY; ++j) {
-      vec2 point{i + 0.5f, j + 0.5f};
+  for (size_t i = 0; i < attributeSize; ++i) {
+    vec3 floats;
+    floats.x = inBuffer->getRawFloat(attributeSize * (v0Index + 0) + i);
+    floats.y = inBuffer->getRawFloat(attributeSize * (v0Index + 1) + i);
+    floats.z = inBuffer->getRawFloat(attributeSize * (v0Index + 2) + i);
 
-      if (insideTriangle(point, p1, p2, p3)) {
-        covered.push_back(point);
-        wasInside = true;
-      } else if (wasInside)
-        break;
-    }
+    float interpolated = triangle.interpolateFloat(floats, point);
+
+    outBuffer->bind(interpolated);
   }
 
-  return covered;
-}
-
-// E(P) > 0 if P is to the right side of the edge
-// E(P) = 0 if P is on the edge
-// E(P) < 0 if P is to the left side of the edge
-float edgeFunction(const vec2& p, const vec4& v0, const vec4& v1) {
-  // https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/rasterization-stage
-  return (p.x - v0.x) * (v1.y - v0.y) - (p.y - v0.y) * (v1.x - v0.x);
-}
-
-bool insideTriangle(const vec2& p, const vec4& v0, const vec4& v1, const vec4& v2) {
-  bool inside = true;
-
-  float e0 = edgeFunction(p, v0, v1);
-  float e1 = edgeFunction(p, v1, v2);
-  float e2 = edgeFunction(p, v2, v0);
-
-  inside &= (e0 == 0) ? isLeftOrTopEdge(v0, v1, v2) : e0 > 0;
-  inside &= (e1 == 0) ? isLeftOrTopEdge(v1, v2, v0) : e1 > 0;
-  inside &= (e2 == 0) ? isLeftOrTopEdge(v2, v0, v1) : e2 > 0;
-
-  return inside;
-}
-
-bool isLeftOrTopEdge(const vec4& v0, const vec4& v1, const vec4& other) {
-  // top edge test
-  if (v0.y == v1.y && other.y > v0.y)
-    return true;
-  
-  // left edge test
-  if (v0.y > v1.y)
-    return true;
-  
-  return false;
-}
-
-vec3 getBarycentricCoords(const vec2& p, const vec4& v0, const vec4& v1, const vec4& v2) {
-  vec2 p0{v0.x, v0.y}, p1{v1.x, v1.y}, p2{v2.x, v2.y};
-
-  float totalArea = getTriangleArea(p0, p1, p2);
-
-  if (totalArea == 0) 
-    throw 1;
-
-  float b0 = getTriangleArea(p, p0, p1) / totalArea;
-  float b1 = getTriangleArea(p, p1, p2) / totalArea;
-  float b2 = getTriangleArea(p, p2, p0) / totalArea;
-
-  assert(b0 >= 0 && b1 >= 0 && b2 >= 0);
-
-  // PRINTLN(p << b0 * totalArea << " " << b1 * totalArea << " " << b2 * totalArea << " " << totalArea << " " << b0 << " " << b1 + b2);
-  // assert((int) (totalArea * b0 + totalArea * b1 + totalArea * b2) == (int) totalArea);
-
-  return vec3{b0, b1, b2};
-}
-
-float getTriangleArea(const vec2& A, const vec2& B, const vec2& C) {
-  // https://www.mathopenref.com/coordtrianglearea.html
-  return abs(A.x * (B.y - C.y) + B.x * (C.y - A.y) + C.x * (A.y - B.y)) * 0.5f;
 }

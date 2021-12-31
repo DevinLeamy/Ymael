@@ -28,7 +28,7 @@ public:
     inStream->getAttributeBuffer(1)->get(attrIndices[1], uvs);
 
     screenCoord = vec3(pos.x, pos.y, pos.z);
-    colour = vec3((int) (uvs.length() * 5) % shades.size(), 255, 255);
+    colour = vec3(std::min(1.0f, uvs.length()) * 8.0f, 100, 100);
 
     outStream->getAttributeBuffer(0)->bind(screenCoord);
     outStream->getAttributeBuffer(1)->bind(colour);

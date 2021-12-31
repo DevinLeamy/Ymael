@@ -20,11 +20,8 @@ void ShaderProgram::runShaderCleanup(Shader* shader, int itemCount) {}
 
 void ShaderProgram::setInputVAO(VertexArrayObject* inVAO) { 
   inStream = inVAO;
-  // inStream = std::unique_ptr<VertexArrayObject>(inVAO);
 }
 
 VertexArrayObject* ShaderProgram::getOutputVAO() {
-
-  // return outStream.get();
   return outStream;
 }

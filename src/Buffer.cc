@@ -4,10 +4,10 @@
 #include "math/math.h"
 #include "utility.h"
 
-Buffer::Buffer(size_t itemCnt, size_t itemSize): itemSize{itemSize},
+Buffer::Buffer(size_t itemCnt, size_t itemSize): itemCnt{itemCnt}, itemSize{itemSize},
   data{std::vector<float>(itemCnt * itemSize)} {}
 
-Buffer::Buffer(std::vector<float> data, size_t itemSize): itemSize{itemSize}, data{data} {}
+Buffer::Buffer(std::vector<float> data, size_t itemSize): itemCnt{data.size()}, itemSize{itemSize}, data{data} {}
 
 std::ostream& operator<<(std::ostream& os, const Buffer& buffer) {
   os << "(buffer) items: " << buffer.getSize() << " itemSize: " << buffer.getItemSize() << std::endl;
@@ -35,7 +35,7 @@ float Buffer::getRawFloat(size_t rawIndex) const { return data[rawIndex]; }
 void Buffer::setRawFloat(size_t rawIndex, float val) { data[rawIndex] = val; }
 
 size_t Buffer::getRawSize() const { return data.size(); }
-size_t Buffer::getSize() const { return getRawSize() / itemSize; }
+size_t Buffer::getSize() const { return itemCnt; }
 size_t Buffer::getItemSize() const { return itemSize; }
 
 

@@ -16,6 +16,11 @@ main: $(OBJ)
 	@mkdir -p $(BIN)
 	$(CC) $(CCFLAGS) $(OBJ) $(LIB) -o $(BIN)/main
 
+debug: $(OBJ)
+	@mkdir -p $(BIN)
+	$(CC) $(CCFLAGS) -D DEBUG_MODE $(OBJ) $(LIB) -o $(BIN)/main
+
+
 %.o: %.cc
 	$(CC) $(CCFLAGS) $(INC) -c -o $@ $<
 

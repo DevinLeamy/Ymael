@@ -1,10 +1,15 @@
 #include <cmath>
 
 #include "math/quat.h"
+#include "utility.h"
 
 quat::quat(float x, float y, float z, float w): x{x}, y{y}, z{z}, w{w} {}
 
-quat quat::rotationQuat(float xAngle, float yAngle, float zAngle) {
+quat quat::rotationQuat(float xAngleDeg, float yAngleDeg, float zAngleDeg) {
+  float xAngle = TO_RADIAN(xAngleDeg);
+  float yAngle = TO_RADIAN(yAngleDeg);
+  float zAngle = TO_RADIAN(zAngleDeg);
+  
   // https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
   float cy = cos(zAngle * 0.5);
   float sy = sin(zAngle * 0.5);
@@ -23,7 +28,6 @@ quat quat::rotationQuat(float xAngle, float yAngle, float zAngle) {
 }
 
 mat4 quat::toMatrix() const {
-  // http://www.songho.ca/opengl/gl_quaternion.html
   return mat4({
     { 1 - 2*y*y - 2*z*z, 2*x*y - 2*w*z,     2*x*z + 2*w*y,     0 },
     { 2*x*y + 2*w*z,     1 - 2*x*x - 2*z*z, 2*y*z - 2*w*x,     0 },

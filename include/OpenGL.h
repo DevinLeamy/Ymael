@@ -8,8 +8,8 @@
 #include "ShaderProgram.h"
 
 namespace CONST {
-  const size_t WW = 800;
-  const size_t WH = 800;
+  const size_t WW = 400;
+  const size_t WH = 400;
 }
 
 class OpenGL {

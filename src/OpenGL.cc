@@ -34,7 +34,8 @@ void OpenGL::draw(const std::vector<std::vector<int>>& indices) {
 }
 
 void OpenGL::doDraw() {
-  std::unique_ptr<VertexArrayObject> fragmentBuffers = std::make_unique<VertexArrayObject>();
+  // TODO: make this a static buffer?
+  static std::unique_ptr<VertexArrayObject> fragmentBuffers = std::make_unique<VertexArrayObject>();
   int bufferSize = CONST::WH * CONST::WW;
   int outputBufferSize;
 
@@ -43,6 +44,9 @@ void OpenGL::doDraw() {
   VertexArrayObject* outputVAO = sProgram->getOutputVAO();
 
   PRINT(*outputVAO);
+
+  rasterizer->setVSOutBuffers(outputVAO);
+  rasterizer->setFSInBuffers(fragmentBuffers.get());
   
   /*
   Note:
@@ -64,11 +68,11 @@ void OpenGL::doDraw() {
   }
 
   DEBUG("RASTERIZE TRIANGLES");
-  int fragments = rasterizer->rasterize(outputVAO, fragmentBuffers.get(), outputBufferSize);
+  rasterizer->rasterize(outputBufferSize);
+
+  size_t fragments = rasterizer->getFragmentCount();
 
   DEBUG("FRAGMENT COUNT: " << fragments);
-
-  assert(fragments <= bufferSize);
 
   // TODO: view transform
 

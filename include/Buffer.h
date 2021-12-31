@@ -36,6 +36,7 @@ public:
   virtual ~Buffer() = default;
 
 protected:
+  size_t itemCnt;
   size_t rawIndex = 0; // index of the next float
   const size_t itemSize; // floats in each value
   std::vector<float> data; // raw data

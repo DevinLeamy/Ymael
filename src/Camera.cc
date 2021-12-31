@@ -5,28 +5,45 @@
 #include "utility.h"
 
 
-Camera::Camera(vec3 pos, vec3 u, vec3 v, vec3 n): pos{pos}, u{u}, v{v}, n{n} {
-  u.normalize();
-  v.normalize();
-  n.normalize();
+Camera::Camera() {
+  pos = vec3(0, 0, 0);
+  forward = vec3(0, 0, 1);
+  up = vec3(0, 1, 0);
+
+  init();
 }
 
+Camera::Camera(const vec3& pos, const vec3& forward, const vec3& up): pos{pos}, forward{forward}, up{up} {
+  init();
+}
+
+void Camera::init() {
+  forward.normalize();
+  up.normalize();
+}
+
+vec3 Camera::getPos() const { return pos; }
+vec3 Camera::getForward() const { return forward; }
+vec3 Camera::getUp() const { return up; }
+
 mat4 Camera::viewMatrix() const {
+  vec3 right = vec3::cross(forward, up).scale(-1);
+
   return mat4({
-    {u.x, u.y, u.z, -pos.x},
-    {v.x, v.y, v.z, -pos.y},
-    {n.x, n.y, n.z, -pos.z},
-    {0,   0,   0,   0},
+    {right.x,   right.y,   right.z,   -pos.x},
+    {up.x,      up.y,      up.z,      -pos.y},
+    {forward.x, forward.y, forward.z, -pos.z},
+    {0,         0,         0,         0},
   });
 }
 
 mat4 Camera::projectionMatrix(float fov, float ar, float nearZ, float farZ) {
-  float invTanHalfFOV= 1.0f / tan(TO_RADIAN(fov * 0.5));
+  float tanHFOV = tanf(TO_RADIAN(fov * 0.5));
   float distFN = farZ - nearZ;
 
   return mat4({
-    {invTanHalfFOV * ar, 0,             0,                                                     0},
-    {0,                  invTanHalfFOV, 0,                                                     0},
+    {1.0f / (tanHFOV * ar), 0,          0,                                                     0},
+    {0,                  1.0f / tanHFOV, 0,                                                    0},
     {0,                  0,             (-farZ - nearZ) / distFN, (2 * farZ * nearZ) / distFN, 0},
     {0,                  0,             1,                                                     0}
   });

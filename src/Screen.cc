@@ -5,12 +5,12 @@
 #include "utility.h"
 
 Screen::Screen(size_t WW, size_t WH): WW{WW}, WH{WH},
-  aFB{std::make_unique<FrameBuffer>()}, FB{std::make_unique<FrameBuffer>()},
-  aDB{std::make_unique<DepthBuffer>()}, DB{std::make_unique<DepthBuffer>()} 
+  FB{std::make_unique<FrameBuffer>()},
+  DB{std::make_unique<DepthBuffer>()} 
 {}
 
 void Screen::loadFragment(vec3 coord, vec3 colour) {
-  size_t bufferIndex = (size_t) ((int) coord.y * WH + (int) coord.x);
+  size_t bufferIndex = (size_t) (coord.y * WH + coord.x);
 
   // PRINTLN(coord << " " << bufferIndex);
 
@@ -33,12 +33,7 @@ void Screen::updateDepth(size_t bufferIndex, float depth) {
   DB->set(bufferIndex, depth);
 }
 
-void Screen::swapBuffers() {
-  aFB.swap(FB);
-  aDB.swap(DB);
-}
-
-void Screen::resetNoneActiveBuffers() {
+void Screen::resetBuffers() {
   DB->reset();
   FB->reset();
 }

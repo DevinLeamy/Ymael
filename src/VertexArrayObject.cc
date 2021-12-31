@@ -29,7 +29,7 @@ bool VertexArrayObject::attributeEnabled(int attrIndex) const {
 }
 
 VertexBufferObject* VertexArrayObject::getAttributeBuffer(int attrIndex) {
-  assert(attributes.count(attrIndex));
+  assert(attributes.count(attrIndex)); 
 
   return attributes[attrIndex];
 }

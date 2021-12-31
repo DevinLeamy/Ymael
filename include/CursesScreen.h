@@ -14,6 +14,7 @@ public:
 
 private:
   void drawPixel(size_t x, size_t y, vec3 colour) const; 
+  void setColor(vec3 colour) const;
   WINDOW *window;
 };
 

@@ -11,50 +11,23 @@
 #include "shaders/VertexShader.h"
 #include "shaders/FragmentShader.h"
 #include "Buffer.h"
-#include "Transform.h"
+#include "WorldTransform.h"
 #include "Camera.h"
 
 #include "usage/BasicVertexShader.h"
 #include "usage/BasicFragmentShader.h"
 
-Camera camera;
+Camera camera(vec3(0, 0, 0), vec3(0, 0, 1), vec3(0, 1, 0));
 
 int main() {
-  Transform modelTransform {
-    .position = vec3(80, 40, 0),
-    .rotation = vec3(0, 0, 0),
-    .scale = vec3(30, 30, 30)
-  };
+  WorldTransform modelWT(vec3(80, 40, 0), vec3(0, 0, 0), 20.0f);
 
   // load model
   DEBUG("LOAD MODEL");
-  std::unique_ptr<Model> model { loadModel("res/B.obj") };
+  std::unique_ptr<Model> model { loadModel("res/triangle.obj") };
   // create vao
   DEBUG("CREATE VAO");
-  VertexArrayObject *vao = new VertexArrayObject(); 
-
-  // create attribute buffers
-  DEBUG("CREATE ATTRIBUTE BUFFERS");
-  VertexBufferObject *positions = new VertexBufferObject(model->getVertices().size(), 3);
-  VertexBufferObject *uvs = new VertexBufferObject(model->getUVs().size(), 2);
-  VertexBufferObject *normals = new VertexBufferObject(model->getNormals().size(), 3);
-
-  // load data into attribute buffers
-  DEBUG("LOAD DATA INTO ATTRIBUTE BUFFERS");
-  for (auto v : model->getVertices())
-    positions->bind(v);
-  
-  for (auto v : model->getUVs())
-    uvs->bind(v);
-  
-  for (auto v : model->getNormals())
-    normals->bind(v);
-  
-  // add attribute buffers to vao
-  DEBUG("BIND ATTRIBUTE BUFFERS TO VAO");
-  vao->bind(positions);
-  vao->bind(uvs);
-  vao->bind(normals);
+  VertexArrayObject *vao = model->getVAO(); 
 
   PRINT(*vao);
 
@@ -67,14 +40,12 @@ int main() {
   FragmentShader* fs = new BasicFragmentShader();
   VertexShader* vs = new BasicVertexShader();
 
-  vs->setUniform(MODEL_MATRIX, createTransformMat(modelTransform));
-  vs->setUniform(VIEW_MATRIX, camera.viewMatrix());
-  vs->setUniform(PROJECTION_MATRIX, Camera::projectionMatrix(90.0, 1.0, -10, 100.0));
-
-  // attach shaders to program
-  DEBUG("ATTACH SHADERS TO SHADER PROGRAM");
   sProgram->bind<VertexShader>(vs);
   sProgram->bind<FragmentShader>(fs);
+
+  vs->setUniform(MODEL_MATRIX, modelWT.toMatrix());
+  vs->setUniform(VIEW_MATRIX, camera.viewMatrix());
+  vs->setUniform(PROJECTION_MATRIX, Camera::projectionMatrix(90.0, 1.0, -100, 200.0));
 
   // load everything into the state machine 
   DEBUG("BIND COMPONENTS TO OPENGL STATE MACHINE");
@@ -86,21 +57,12 @@ int main() {
 
   GL->draw(model->getIndices());
   while(1) {
-    modelTransform.rotation.y += PI / 30;
-    // modelTransform.rotation.x += PI / 40;
-    vs->setUniform(MODEL_MATRIX, createTransformMat(modelTransform));
+    modelWT.rotate(vec3(0, 0, 0));
+    // modelTransform.rotation.x += 10;
+    vs->setUniform(MODEL_MATRIX, modelWT.toMatrix());
     GL->draw(model->getIndices());
   }
 
   DEBUG("RENDER COMPLETE");
-
-
-  // delete positions;
-  // delete uvs;
-  // delete normals;
-  // delete vao;
-  // delete fs;
-  // delete vs;
-  // delete sProgram;
 }
 

@@ -1,14 +1,38 @@
 #pragma once
 
 #include "VertexArrayObject.h"
+#include "Triangle.h"
 
 class Rasterizer {
 public:
-  Rasterizer() = default;
+  Rasterizer();
   ~Rasterizer() = default;
-  // create fragment from the |vertices| vertices
-  // using the outputs from the vertex shader
-  int rasterize(VertexArrayObject *vVAO, VertexArrayObject *fVAO, int vertices);
+
+  // TODO: should be moved elsewhere
+  void divideByW();
+  void viewportTransform();
+
+  inline void setVSOutBuffers(VertexArrayObject *vsOutBuffers) { 
+    this->vsOutBuffers = vsOutBuffers; 
+  }
+
+  inline void setFSInBuffers(VertexArrayObject *fsInBuffers) { 
+    this->fsInBuffers = fsInBuffers; 
+  }
+
+  inline size_t getFragmentCount() { return fragmentCount; }
+
+  void rasterize(size_t vertices);
+  void rasterizeTriangle(size_t v0Index);
+  void interpolateAttribute(size_t v0Index, size_t attrIndex, const vec2& point, const Triangle& triangle);
+
+  Triangle getTriangle(size_t v0Index) const;
+
+private:
+  VertexArrayObject *vsOutBuffers;
+  VertexArrayObject *fsInBuffers;
+  
+  size_t fragmentCount;
 };
 
 /*
