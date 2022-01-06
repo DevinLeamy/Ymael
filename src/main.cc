@@ -12,6 +12,7 @@
 #include "shaders/FragmentShader.h"
 #include "Buffer.h"
 #include "WorldTransform.h"
+#include "Triangle.h"
 #include "Camera.h"
 
 #include "usage/BasicVertexShader.h"
@@ -24,12 +25,16 @@ WorldTransform modelWT(vec3(0, 0, 0), vec3(0, 0, 0.0f), 20.0f);
 void handleInput();
 void initController();
 
+void test();
+
 int main() {
+  // test();
+  // return 0;
   initController();
 
   // load model
   DEBUG("LOAD MODEL");
-  std::unique_ptr<Model> model { loadModel("res/triangle.obj") };
+  std::unique_ptr<Model> model { loadModel("res/B.obj") };
   // create vao
   DEBUG("CREATE VERTICES");
   std::vector<Vertex*> vertices = model->getVertices(); 
@@ -59,10 +64,10 @@ int main() {
 
   GL->render(vertices);
 
-  while (1);
+  // while (1);
   while(1) {
     handleInput();
-    // modelWT.rotate(vec3(0, 0, 1));
+    modelWT.rotate(vec3(0, 1, 0));
     vs->setUniform(MODEL_MATRIX, modelWT.toMatrix());
     vs->setUniform(VIEW_MATRIX, camera.viewMatrix());
     GL->render(vertices);
@@ -85,4 +90,12 @@ void handleInput() {
   flushinp();
   
   camera.update_temp(c);
+}
+
+void test() {
+  vec2 a(0, 0), b(0, 20), c(20, 20), p(19.5f, 10.5f);
+  Triangle t (a, b, c);
+
+  std::cout << Triangle::getArea(a, b, c) << " " << Triangle::getArea(a, b, p) << std::endl;
+  std::cout << Triangle::getArea(a, p, c) << " " << Triangle::getArea(p, b, c) << std::endl;
 }

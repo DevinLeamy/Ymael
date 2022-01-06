@@ -12,8 +12,12 @@ void Screen::loadFragment(Fragment* fragment) {
   loadFragment(fragment->getPosition(), fragment->getColor());
 }
 
+size_t Screen::getBufferIndex(size_t x, size_t y) const {
+  return y * WH + x;
+}
+
 void Screen::loadFragment(vec3 coord, vec3 colour) {
-  size_t bufferIndex = (size_t) (coord.y * WH + coord.x);
+  size_t bufferIndex = getBufferIndex((size_t) coord.x, (size_t) coord.y);
 
   float curDepth;
   float newDepth = coord.z;

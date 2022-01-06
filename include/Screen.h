@@ -23,6 +23,7 @@ protected:
   void resetBuffers();
   void updateColour(size_t bufferIndex, vec3 colour);
   void updateDepth(size_t bufferIndex, float depth);
+  size_t getBufferIndex(size_t x, size_t y) const;
 
   bool pixelInView(size_t x, size_t y) const; 
 

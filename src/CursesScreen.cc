@@ -37,7 +37,8 @@ void CursesScreen::draw() {
     for (size_t y = 0; y < WH; ++y) {
       FB->get(y * WH + x, pixelColour);
 
-      drawPixel(x, y, pixelColour);
+      // TODO: make transformation to CursesScreen coords a function
+      drawPixel(x, WH - y, pixelColour);
     }
   }
 
@@ -49,10 +50,11 @@ void CursesScreen::draw() {
 
 void CursesScreen::drawPixel(size_t x, size_t y, vec3 colour) const {
   std::string shades = "...";
+  
   if (pixelInView(x, y) && colour.z == 100) {
     setColor(colour);
     
-    mvwaddch(window, WH - y, x, 'o'); // shades[colour.x]);
+    mvwaddch(window, y, x, 'o');
 
     // wattroff(window, COLOR_PAIR(COLOR_ATTR));
   }

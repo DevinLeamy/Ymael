@@ -36,12 +36,6 @@ void OpenGL::render(const std::vector<Vertex*>& vertices) {
     DEBUG("RUN RASTERIZER");
     std::vector<std::unique_ptr<Fragment>> fragments = rasterizer->rasterize(triangles[i].get());
 
-//DELETE:
-    for (size_t j = 0; j < fragments.size(); ++j)
-      std::cout << fragments[j].get()->getPosition();
-  
-//----
-
     // (4) run the fragment shader
     DEBUG("RUN FRAGMENT SHADER");
     std::vector<std::unique_ptr<Fragment>> tFragments;

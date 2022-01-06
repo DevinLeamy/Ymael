@@ -15,8 +15,8 @@ vec3 Triangle::getBarycentricCoords(const vec2& point) const {
   float totalArea = area(); 
 
   bCoords.x = Triangle::getArea(point, b, c) / totalArea;
-  bCoords.y = Triangle::getArea(point, a, c) / totalArea;
-  bCoords.z = 1.0f - bCoords.x - bCoords.y;
+  bCoords.y = Triangle::getArea(a, point, c) / totalArea;
+  bCoords.z = Triangle::getArea(a, b, point) / totalArea;
 
   return bCoords; 
 }
@@ -30,16 +30,14 @@ float Triangle::interpolateFloat(const vec3& vals, const vec2& point) const {
 bool Triangle::containsPoint(const vec2& point) const {
   // Add top-left test
   vec3 bCoords = getBarycentricCoords(point);
-  std::cout << "Bar " << bCoords << point;
 
-  return bCoords.x >= 0 && bCoords.y >= 0 && bCoords.z >= 0; 
+  return abs(bCoords.x + bCoords.y + bCoords.z - 1.0f) < 0.05f;
 }
 
 float Triangle::area() const {
   return Triangle::getArea(a, b, c);
 }
 
-// creating a bounding box struct? 
 BoundingBox Triangle::getBoundingBox() const {
   return BoundingBox {
     .minX = (int) std::min({a.x, b.x, c.x}),
