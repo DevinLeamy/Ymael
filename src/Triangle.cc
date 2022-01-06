@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cmath>
+#include <cassert>
 
 #include "Triangle.h"
 #include "math/math.h"
@@ -29,6 +30,7 @@ float Triangle::interpolateFloat(const vec3& vals, const vec2& point) const {
 bool Triangle::containsPoint(const vec2& point) const {
   // Add top-left test
   vec3 bCoords = getBarycentricCoords(point);
+  std::cout << "Bar " << bCoords << point;
 
   return bCoords.x >= 0 && bCoords.y >= 0 && bCoords.z >= 0; 
 }
@@ -68,7 +70,7 @@ std::vector<vec2> Triangle::getCoveredPoints(Triangle* triangle, const BoundingB
 
       bool triangleContainsPnt; 
 
-      if (point.x <= 0 || point.x >= CONST::WW)
+      if (point.x < 0 || point.x >= CONST::WW)
         assert(false);
 
       if ((triangleContainsPnt = triangle->containsPoint(pointCenter))) {

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <ncurses.h>
 
 #include "math/vec2.h"
 #include "OpenGL.h"
@@ -16,14 +17,19 @@
 #include "usage/BasicVertexShader.h"
 #include "usage/BasicFragmentShader.h"
 
+// Camera camera(vec3(-10, -10, 0), vec3(0, 0, 1), vec3(0, 1, 0));
 Camera camera(vec3(0, 0, 0), vec3(0, 0, 1), vec3(0, 1, 0));
+WorldTransform modelWT(vec3(0, 0, 0), vec3(0, 0, 0.0f), 20.0f);
+
+void handleInput();
+void initController();
 
 int main() {
-  WorldTransform modelWT(vec3(40, 40, 0), vec3(45, 0, 0), 20.0f);
+  initController();
 
   // load model
   DEBUG("LOAD MODEL");
-  std::unique_ptr<Model> model { loadModel("res/cube.obj") };
+  std::unique_ptr<Model> model { loadModel("res/triangle.obj") };
   // create vao
   DEBUG("CREATE VERTICES");
   std::vector<Vertex*> vertices = model->getVertices(); 
@@ -42,7 +48,7 @@ int main() {
 
   vs->setUniform(MODEL_MATRIX, modelWT.toMatrix());
   vs->setUniform(VIEW_MATRIX, camera.viewMatrix());
-  vs->setUniform(PROJECTION_MATRIX, Camera::projectionMatrix(90.0, 1.0, -100, 200.0));
+  vs->setUniform(PROJECTION_MATRIX, Camera::projectionMatrix(90.0, 1.0, 0, 200.0));
 
   // load everything into the state machine 
   DEBUG("BIND COMPONENTS TO OPENGL STATE MACHINE");
@@ -53,14 +59,30 @@ int main() {
 
   GL->render(vertices);
 
-  // while (1);
+  while (1);
   while(1) {
-    modelWT.rotate(vec3(0, 10, 0));
-    // modelTransform.rotation.x += 10;
+    handleInput();
+    // modelWT.rotate(vec3(0, 0, 1));
     vs->setUniform(MODEL_MATRIX, modelWT.toMatrix());
+    vs->setUniform(VIEW_MATRIX, camera.viewMatrix());
     GL->render(vertices);
   }
 
   DEBUG("RENDER COMPLETE");
 }
 
+
+void initController() {
+  cbreak();
+  noecho();
+  nodelay(stdscr, true);
+  keypad(stdscr, TRUE);
+}
+
+void handleInput() {
+  char c = getch();
+
+  flushinp();
+  
+  camera.update_temp(c);
+}

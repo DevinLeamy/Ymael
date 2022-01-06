@@ -9,8 +9,8 @@
 #include "GTriangle.h"
 
 namespace CONST {
-  const size_t WW = 400;
-  const size_t WH = 400;
+  const size_t WW = 80;
+  const size_t WH = 80;
 }
 
 class OpenGL {
