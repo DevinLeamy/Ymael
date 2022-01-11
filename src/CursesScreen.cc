@@ -17,9 +17,10 @@ CursesScreen::CursesScreen(size_t WW, size_t WH): Screen { WW, WH } {
   start_color();
 
   for (int i = 0; i < 8; ++i)
-    init_pair(i, i, i);
+    init_pair(i, i, 0);
 
   window = newwin(WH, WW, 0, 0);
+  wborder(window, '|', '|', '-', '-', '+', '+', '+', '+');
 }
 
 CursesScreen::~CursesScreen() {
@@ -39,9 +40,11 @@ void CursesScreen::draw() {
 
       // TODO: make transformation to CursesScreen coords a function
       drawPixel(x, WH - y, pixelColour);
+      // wrefresh(window);
     }
   }
 
+  wborder(window, '|', '|', '-', '-', '+', '+', '+', '+');
   wrefresh(window);
 
   DEBUG("RESET BUFFERS");
@@ -52,7 +55,7 @@ void CursesScreen::drawPixel(size_t x, size_t y, vec3 colour) const {
   std::string shades = "...";
   
   if (pixelInView(x, y) && colour.z == 100) {
-    setColor(colour);
+    // setColor(colour);
     
     mvwaddch(window, y, x, 'o');
 
@@ -61,13 +64,13 @@ void CursesScreen::drawPixel(size_t x, size_t y, vec3 colour) const {
 }
 
 void CursesScreen::setColor(vec3 colour) const {
-  vec3 cursesColour(
-    1000.0f * colour.x / 255.0f,
-    1000.0f * colour.y / 255.0f,
-    1000.0f * colour.z / 255.0f
-  );
+  // vec3 cursesColour(
+  //   1000.0f * colour.x / 255.0f,
+  //   1000.0f * colour.y / 255.0f,
+  //   1000.0f * colour.z / 255.0f
+  // );
 
 
-  // wattron(window, COLOR_PAIR((int) colour.x % 7));
+  wattron(window, COLOR_PAIR((int) colour.x % 8));
   // wattron(window, COLOR_PAIR(2));
 }

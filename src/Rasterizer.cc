@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <cmath>
+#include <cassert>
+#include <iostream>
 
 #include "Rasterizer.h"
 #include "math/math.h"
@@ -13,14 +15,13 @@ Rasterizer::Rasterizer() {}
 std::vector<std::unique_ptr<Fragment>> Rasterizer::rasterize(GTriangle* triangle) const {
   if (triangle->area() == 0.0f) return {};
 
-  std::vector<std::unique_ptr<Fragment>> fragments;
-
   BoundingBox windowBBox{
     .minX = 0, .maxX = CONST::WW,
     .minY = 0, .maxY = CONST::WH
   };
 
   std::vector<vec2> coveredPoints = Triangle::getCoveredPoints(triangle, windowBBox);
+  std::vector<std::unique_ptr<Fragment>> fragments;
 
   for (const vec2& point : coveredPoints) {
     assert(point.x >= 0 && point.x <= CONST::WW);
@@ -35,43 +36,3 @@ std::vector<std::unique_ptr<Fragment>> Rasterizer::rasterize(GTriangle* triangle
 
   return std::move(fragments);
 }
-
-// // perspective division
-// void Rasterizer::divideByW() {
-//   VertexBufferObject *positions = vsOutBuffers->getAttributeBuffer(0);
-
-//   vec4 glPos;
-//   for (size_t i = 0; i < positions->getSize(); ++i) {
-//     positions->get(i, glPos);
-
-//     float w = glPos.w;
-//     if (w != 0.0f) {
-//       glPos.x /= w;
-//       glPos.y /= w;
-//       glPos.z /= w;
-
-//       positions->set(i, glPos);
-//     }
-//   }
-// }
-
-// // [-1, 1] -> [0, WW/WH]
-// void Rasterizer::viewportTransform() {
-//   VertexBufferObject *positions = vsOutBuffers->getAttributeBuffer(0);
-
-//   vec4 glPos;
-//   for (size_t i = 0; i < positions->getSize(); ++i) {
-//     positions->get(i, glPos);
-//     // assert(glPos.x >= -1 && glPos.x <= 1);
-//     // assert(glPos.y >= -1 && glPos.y <= 1);
-
-//     PRINT(glPos);
-
-//     glPos.x = ((glPos.x + 1.0f) * CONST::WW) / 2.0f;
-//     glPos.y = ((glPos.y + 1.0f) * CONST::WH) / 2.0f;
-    
-//     PRINTLN(glPos);
-
-//     positions->set(i, glPos);
-//   }
-// }

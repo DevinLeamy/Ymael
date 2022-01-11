@@ -28,10 +28,32 @@ float Triangle::interpolateFloat(const vec3& vals, const vec2& point) const {
 }
 
 bool Triangle::containsPoint(const vec2& point) const {
-  // Add top-left test
-  vec3 bCoords = getBarycentricCoords(point);
+  float wa = ((b.y - c.y) * (point.x - c.x) +
+            (c.x - b.x) * (point.y - c.y)) /
+        ((b.y - c.y) * (a.x - c.x) +
+         (c.x - b.x) * (a.y - c.y));
 
-  return abs(bCoords.x + bCoords.y + bCoords.z - 1.0f) < 0.05f;
+    float wb = ((c.y - a.y) * (point.x - c.x) +
+            (a.x - c.x) * (point.y - c.y)) /
+        ((b.y - c.y) * (a.x - c.x) +
+         (c.x - b.x) * (a.y - c.y));
+
+    float wc = 1.0f - wa - wb;
+
+    int one = (wa < -0.001);
+    int two = (wb < -0.001);
+    int three = (wc < -0.001);
+
+    //is the point in the triangle
+    return ((one == two) && (two == three));
+  // Add top-left test
+  // vec3 bCoords = getBarycentricCoords(point);
+  
+  // return ((bCoords.x < -0.001f == bCoords.y < -0.001f) && (bCoords.y < -0.001f == bCoords.z < -0.001f));
+
+  // std::cout << bCoords << std::endl;
+
+  // return abs(bCoords.x + bCoords.y + bCoords.z - 1.0f) < 0.05f;
 }
 
 float Triangle::area() const {
@@ -67,9 +89,6 @@ std::vector<vec2> Triangle::getCoveredPoints(Triangle* triangle, const BoundingB
       vec2 point(x, y);
 
       bool triangleContainsPnt; 
-
-      if (point.x < 0 || point.x >= CONST::WW)
-        assert(false);
 
       if ((triangleContainsPnt = triangle->containsPoint(pointCenter))) {
         covered.push_back(point);

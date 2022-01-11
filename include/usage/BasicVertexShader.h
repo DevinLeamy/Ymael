@@ -1,4 +1,6 @@
 #include <memory>
+#include <cassert>
+#include <iostream>
 
 #include "shaders/VertexShader.h"
 #include "math/math.h"
@@ -40,6 +42,17 @@ public:
     glPos = projectionMatrix * viewMatrix * modelMatrix * vec4(pos.x, pos.y, pos.z, 1.0);
 
     PRINTLN(glPos);
+
+    // divide by w
+    // glPos.x /= glPos.w;
+    // glPos.y /= glPos.w;
+    // glPos.z /= glPos.w;
+
+    // viewport transform
+    // glPos.x = ((glPos.x + 1.0f) * CONST::WW) / 2.0f;
+    // glPos.y = ((glPos.y + 1.0f) * CONST::WH) / 2.0f;
+
+    // std::cout << glPos << std::endl;
 
     outVertex->set(0, glPos.toVector());
     outVertex->set(1, uv.toVector());

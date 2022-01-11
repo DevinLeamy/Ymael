@@ -1,4 +1,5 @@
 #include <string>
+#include <cmath>
 
 #include "shaders/FragmentShader.h"
 #include "math/math.h"
@@ -31,7 +32,7 @@ public:
     fragmentIn->get(1, uvs);
 
     screenCoord = vec3(pos.x, pos.y, pos.z);
-    colour = vec3(std::min(1.0f, uvs.length()) * 8.0f, 100, 100);
+    colour = vec3((int) (uvs.x * 8.0f) % 8, 100, 100);
 
     fragmentOut->set(0, screenCoord);
     fragmentOut->set(1, colour);

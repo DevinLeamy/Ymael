@@ -36,6 +36,14 @@ public:
       pos -= up * STEP_SCALE;
     }
     break;
+    case 'f': {
+      pos += forward * STEP_SCALE; 
+    }
+    break;
+    case 'b': {
+      pos -= forward * STEP_SCALE;
+    }
+    break;
     case 'a': {
       vec3 left = vec3::cross(forward, up).normalize();
       left = left * STEP_SCALE;
