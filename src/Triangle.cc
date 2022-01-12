@@ -27,7 +27,22 @@ float Triangle::interpolateFloat(const vec3& vals, const vec2& point) const {
   return vec3::dot(bCoords, vals);
 }
 
+float edgeFunction(const vec2 &a, const vec2 &b, const vec2 &point) { 
+    return (point.x - a.x) * (b.y - a.y) - (point.y - a.y) * (b.x - a.x); 
+} 
+
 bool Triangle::containsPoint(const vec2& point) const {
+  // https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/rasterization-stage
+  // TODO: add top-left test
+  // bool inside = true; 
+  // inside &= edgeFunction(a, b, point) >= 0; 
+  // inside &= edgeFunction(b, c, point) >= 0; 
+  // inside &= edgeFunction(c, a, point) >= 0; 
+
+  // return inside;
+
+
+  // temp
   float wa = ((b.y - c.y) * (point.x - c.x) +
             (c.x - b.x) * (point.y - c.y)) /
         ((b.y - c.y) * (a.x - c.x) +

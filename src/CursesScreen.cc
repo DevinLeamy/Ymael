@@ -52,12 +52,14 @@ void CursesScreen::draw() {
 }
 
 void CursesScreen::drawPixel(size_t x, size_t y, vec3 colour) const {
-  std::string shades = "...";
+  std::string lightLevels = "@#%&*=+o;~,.";
   
-  if (pixelInView(x, y) && colour.z == 100) {
+  if (pixelInView(x, y) && colour.y == 100) {
     // setColor(colour);
+
+    int lightLevel = (int) colour.z;
     
-    mvwaddch(window, y, x, 'o');
+    mvwaddch(window, y, x, lightLevels[lightLevel]);
 
     // wattroff(window, COLOR_PAIR(COLOR_ATTR));
   }

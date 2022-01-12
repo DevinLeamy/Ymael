@@ -9,7 +9,7 @@
 #include "GTriangle.h"
 
 namespace CONST {
-  const size_t WW = 400;
+  const size_t WW = 150;
   const size_t WH = 150;
 }
 
