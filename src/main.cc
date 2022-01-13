@@ -2,6 +2,7 @@
 #include <memory>
 #include <ncurses.h>
 
+#include "GameObject.h"
 #include "math/vec2.h"
 #include "OpenGL.h"
 #include "ModelLoader.h"
@@ -21,7 +22,17 @@
 // Camera camera(vec3(-10, -10, 0), vec3(0, 0, 1), vec3(0, 1, 0));
 // Camera camera(vec3(0, 0, 0), vec3(0, 0, 1), vec3(0.612375, 0.612375, -0.50000));
 Camera camera(vec3(0, 0, 0), vec3(0, 0, 1), vec3(0, 1, 0));
-WorldTransform modelWT(vec3(30, 30, 0), vec3(0.0f, 0.0f, 0.0f), 30.0f);
+WorldTransform modelWT(vec3(0, 0, 0), vec3(0.0f, 0.0f, 0.0f), 30.0f);
+
+/**
+ * ---MAJOR TODOS---
+ * Add texture sampling and colors. (OpenCV? or https://stackoverflow.com/questions/25298341/load-an-image-into-rgba-array-c)
+ * Clean up and refactor the code
+ * Create a 3D game
+ * Write a blog post about how it works
+ * Create a really awesome Youtube video about the engine
+ * 
+*/
 
 void handleInput();
 void initController();
@@ -35,43 +46,33 @@ int main() {
 
   // load model
   DEBUG("LOAD MODEL");
-  std::unique_ptr<Model> model { loadModel("res/square.obj") };
-  // create vao
-  DEBUG("CREATE VERTICES");
-  std::vector<Vertex*> vertices = model->getVertices(); 
-
-  // create shader program
-  DEBUG("CREATE SHADER PROGRAM");
-  ShaderProgram* sProgram = new ShaderProgram();
+  std::unique_ptr<Model> model { loadModel("res/cube.obj") };
 
   // create shaders
   DEBUG("CREATE VS AND FS");
   FragmentShader* fs = new BasicFragmentShader();
   VertexShader* vs = new BasicVertexShader();
 
-  sProgram->bind<VertexShader>(vs);
-  sProgram->bind<FragmentShader>(fs);
-
-  vs->setUniform(MODEL_MATRIX, modelWT.toMatrix());
   vs->setUniform(VIEW_MATRIX, camera.viewMatrix());
   vs->setUniform(PROJECTION_MATRIX, Camera::projectionMatrix(90.0, 1.0, -40, 100.0));
 
-  // load everything into the state machine 
-  DEBUG("BIND COMPONENTS TO OPENGL STATE MACHINE");
-  GL->bind(sProgram);
+  WorldTransform wt(vec3(0, 0, 0), vec3(0.0f, 0.0f, 0.0f), 30.0f);
+  GameObject* go = new GameObject(wt, model.get(), vs, fs);
 
-  // draw triangles
-  DEBUG("DRAW TRIANGLES");
-
-  GL->render(vertices);
+  WorldTransform wt2(vec3(0, 0, 10), vec3(0.0f, 0.0f, 0.0f), 30.0f);
+  GameObject* go2 = new GameObject(wt2, model.get(), vs, fs);
 
   // while (1);
   while(1) {
     handleInput();
-    modelWT.rotate(vec3(5, 5, 5));
-    vs->setUniform(MODEL_MATRIX, modelWT.toMatrix());
+
+    // go->update();
+    go2->update();
+
     vs->setUniform(VIEW_MATRIX, camera.viewMatrix());
-    GL->render(vertices);
+
+    // go->render();
+    go2->render();
   }
 
   DEBUG("RENDER COMPLETE");

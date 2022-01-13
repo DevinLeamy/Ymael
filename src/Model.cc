@@ -14,7 +14,7 @@ Model::Model(const vector<vec3>& positions, const vector<vec2>& uvs, const vecto
   for (vec3 n : normals)  this->normals.push_back(std::make_unique<Attribute>(2, n.toVector()));
 
 
-  // create verticies
+  // create vertices
   for (const vector<int>& vertexAttrs : indices) {
     std::unique_ptr<Vertex> vertex = std::make_unique<Vertex>();
     vertex->set(0, this->positions[vertexAttrs[0]].get()); // position

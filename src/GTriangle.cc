@@ -8,7 +8,9 @@
 
 #define POSITION_ATTR 0
 
-GTriangle::GTriangle(Vertex* a, Vertex* b, Vertex* c): Triangle{}, p_a{a}, p_b{b}, p_c{c}, attributes{a->getAttrIndices()} {
+GTriangle::GTriangle(Vertex* a, Vertex* b, Vertex* c): 
+  Triangle{}, p_a{a}, p_b{b}, p_c{c}, attributes{a->getAttrIndices()} 
+{
   vec4 aPos = a->getPosition();
   vec4 bPos = b->getPosition();
   vec4 cPos = c->getPosition();

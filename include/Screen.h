@@ -17,6 +17,8 @@ public:
   void loadFragment(Fragment *);
   void loadFragment(vec3 coord, vec3 colour); 
 
+  virtual void refresh() = 0;
+
   virtual ~Screen() = default;
 
 protected:
@@ -25,7 +27,7 @@ protected:
   void updateDepth(size_t bufferIndex, float depth);
   size_t getBufferIndex(size_t x, size_t y) const;
 
-  bool pixelInView(size_t x, size_t y) const; 
+  bool pixelInView(const vec2& coords) const; 
 
   // a -> actively drawing to the screen
   std::unique_ptr<FrameBuffer> FB;

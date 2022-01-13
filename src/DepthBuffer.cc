@@ -2,11 +2,9 @@
 #include "OpenGL.h"
 
 DepthBuffer::DepthBuffer(): Buffer { CONST::WW * CONST::WH, 1 } {
-  for (size_t i = 0; i < data.size(); ++i)
-    data[i] = 1.0; // maximum depth
+  reset();
 }
 
 void DepthBuffer::reset() {
-  for (size_t i = 0; i < data.size(); ++i)
-    data[i] = 1.0;
+  std::fill(data.begin(), data.end(), 1.0f);
 }

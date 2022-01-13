@@ -43,8 +43,8 @@ void Screen::resetBuffers() {
   FB->reset();
 }
 
-bool Screen::pixelInView(size_t x, size_t y) const {
-  if (x < 0 || x >= WW || y < 0 || y >= WH)
+bool Screen::pixelInView(const vec2& coords) const {
+  if (coords.x < 0 || coords.x >= WW || coords.y < 0 || coords.y >= WH)
     return false;
   return true;
 }

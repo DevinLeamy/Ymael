@@ -11,17 +11,6 @@
 class BasicVertexShader: public VertexShader {
 public:
   BasicVertexShader(): VertexShader {} {
-    // TODO: delete inputBufferMap and outputBufferMap?
-    inputBufferMap[0] = 3; // position
-    inputBufferMap[1] = 2; // uvs
-    inputBufferMap[2] = 3; // normals
-    inputBufferMap[3] = 3; // colours
-
-    outputBufferMap[0] = 4; // position
-    outputBufferMap[1] = 2; // uvs 
-    outputBufferMap[2] = 3; // transformed normals
-    outputBufferMap[3] = 3; // transformed light position
-
     // TODO: refactor uniform system to and make this just another uniform
     lightPosition = vec3(0, 0, 50);
   }

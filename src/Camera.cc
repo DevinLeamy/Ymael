@@ -13,7 +13,9 @@ Camera::Camera() {
   init();
 }
 
-Camera::Camera(const vec3& pos, const vec3& forward, const vec3& up): pos{pos}, forward{forward}, up{up} {
+Camera::Camera(const vec3& pos, const vec3& forward, const vec3& up): 
+  pos{pos}, forward{forward}, up{up} 
+{
   init();
 }
 
