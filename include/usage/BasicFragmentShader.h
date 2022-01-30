@@ -32,7 +32,7 @@ public:
 
     screenCoord = vec3(pos.x, pos.y, pos.z);
 
-    float brightness = 1.0f - std::min(0.99f, vec3::dot(normal, lightPosition));
+    float brightness = std::min(0.99f, vec3::dot(normal, lightPosition));
     int lightLevel = (int) std::floor(brightness * lightLevels.size() / 2);
 
     colour = vec3((int) (uvs.x * 8.0f) % 8, 100, lightLevel);
@@ -42,5 +42,5 @@ public:
   }
 
 private:
-  std::string lightLevels = "@#%&*=+o;~,.";
+  std::string lightLevels = ".,~;o+=*&%#@";
 };

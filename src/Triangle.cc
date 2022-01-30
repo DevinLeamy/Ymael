@@ -32,43 +32,14 @@ float edgeFunction(const vec2 &a, const vec2 &b, const vec2 &point) {
 } 
 
 bool Triangle::containsPoint(const vec2& point) const {
-  // https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/rasterization-stage
-  // TODO: add top-left test
-  // bool inside = true; 
-  // inside &= edgeFunction(a, b, point) >= 0; 
-  // inside &= edgeFunction(b, c, point) >= 0; 
-  // inside &= edgeFunction(c, a, point) >= 0; 
+  float denominator = ((b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y));
 
-  // return inside;
+  float wa = ((b.y - c.y) * (point.x - c.x) + (c.x - b.x) * (point.y - c.y)) / denominator;
+  float wb = ((c.y - a.y) * (point.x - c.x) + (a.x - c.x) * (point.y - c.y)) / denominator;
 
+  float wc = 1.0f - wa - wb;
 
-  // temp
-  float wa = ((b.y - c.y) * (point.x - c.x) +
-            (c.x - b.x) * (point.y - c.y)) /
-        ((b.y - c.y) * (a.x - c.x) +
-         (c.x - b.x) * (a.y - c.y));
-
-    float wb = ((c.y - a.y) * (point.x - c.x) +
-            (a.x - c.x) * (point.y - c.y)) /
-        ((b.y - c.y) * (a.x - c.x) +
-         (c.x - b.x) * (a.y - c.y));
-
-    float wc = 1.0f - wa - wb;
-
-    int one = (wa < -0.001);
-    int two = (wb < -0.001);
-    int three = (wc < -0.001);
-
-    //is the point in the triangle
-    return ((one == two) && (two == three));
-  // Add top-left test
-  // vec3 bCoords = getBarycentricCoords(point);
-  
-  // return ((bCoords.x < -0.001f == bCoords.y < -0.001f) && (bCoords.y < -0.001f == bCoords.z < -0.001f));
-
-  // std::cout << bCoords << std::endl;
-
-  // return abs(bCoords.x + bCoords.y + bCoords.z - 1.0f) < 0.05f;
+  return (wa < -0.001) == (wb < -0.001) && (wb < -0.001) == (wc < -0.001);
 }
 
 float Triangle::area() const {

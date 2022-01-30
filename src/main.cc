@@ -19,8 +19,6 @@
 #include "usage/BasicVertexShader.h"
 #include "usage/BasicFragmentShader.h"
 
-// Camera camera(vec3(-10, -10, 0), vec3(0, 0, 1), vec3(0, 1, 0));
-// Camera camera(vec3(0, 0, 0), vec3(0, 0, 1), vec3(0.612375, 0.612375, -0.50000));
 Camera camera(vec3(0, 0, 0), vec3(0, 0, 1), vec3(0, 1, 0));
 WorldTransform modelWT(vec3(0, 0, 0), vec3(0.0f, 0.0f, 0.0f), 30.0f);
 
@@ -30,8 +28,6 @@ WorldTransform modelWT(vec3(0, 0, 0), vec3(0.0f, 0.0f, 0.0f), 30.0f);
  * Clean up and refactor the code
  * Create a 3D game
  * Write a blog post about how it works
- * Create a really awesome Youtube video about the engine
- * 
 */
 
 void handleInput();

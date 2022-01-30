@@ -22,7 +22,7 @@ private:
   // void setColor(vec3 colour) const;
 
   WINDOW *window;
-  std::string lightLevels = "@#%&*=+o;~,.";
+  std::string lightLevels = ".,~;o+=*&%#@";
 };
 
 

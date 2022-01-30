@@ -6,5 +6,5 @@ DepthBuffer::DepthBuffer(): Buffer { CONST::WW * CONST::WH, 1 } {
 }
 
 void DepthBuffer::reset() {
-  std::fill(data.begin(), data.end(), 1.0f);
+  std::fill(data.begin(), data.end(), 0.0f);
 }
