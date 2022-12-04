@@ -28,71 +28,65 @@ WorldTransform modelWT(vec3(0, 0, 0), vec3(0.0f, 0.0f, 0.0f), 30.0f);
  * Clean up and refactor the code
  * Create a 3D game
  * Write a blog post about how it works
-*/
+ */
 
 void handleInput();
 void initController();
 
 void test();
 
-int main() {
-  // test();
-  // return 0;
+int main()
+{
   initController();
 
   // load model
   DEBUG("LOAD MODEL");
-  std::unique_ptr<Model> model { loadModel("res/cube.obj") };
+  std::unique_ptr<Model> model{loadModel("res/cube.obj")};
 
   // create shaders
   DEBUG("CREATE VS AND FS");
-  FragmentShader* fs = new BasicFragmentShader();
-  VertexShader* vs = new BasicVertexShader();
+  FragmentShader *fs = new BasicFragmentShader();
+  VertexShader *vs = new BasicVertexShader();
 
   vs->setUniform(VIEW_MATRIX, camera.viewMatrix());
   vs->setUniform(PROJECTION_MATRIX, Camera::projectionMatrix(90.0, 1.0, -40, 100.0));
 
   WorldTransform wt(vec3(0, 0, 0), vec3(0.0f, 0.0f, 0.0f), 30.0f);
-  GameObject* go = new GameObject(wt, model.get(), vs, fs);
+  GameObject *go = new GameObject(wt, model.get(), vs, fs);
 
-  WorldTransform wt2(vec3(0, 0, 10), vec3(0.0f, 0.0f, 0.0f), 30.0f);
-  GameObject* go2 = new GameObject(wt2, model.get(), vs, fs);
-
-  // while (1);
-  while(1) {
+  while (1)
+  {
     handleInput();
 
-    // go->update();
-    go2->update();
-
+    go->update();
     vs->setUniform(VIEW_MATRIX, camera.viewMatrix());
-
-    // go->render();
-    go2->render();
+    go->render();
   }
 
   DEBUG("RENDER COMPLETE");
 }
 
-
-void initController() {
+void initController()
+{
   cbreak();
   noecho();
   nodelay(stdscr, true);
   keypad(stdscr, TRUE);
 }
 
-void handleInput() {
+void handleInput()
+{
   char c = getch();
 
   flushinp();
-  
+
   camera.update_temp(c);
 }
 
-void test() {
+void test()
+{
   vec2 a(0, 0), b(0, 20), c(20, 20), p(19.5f, 10.5f);
-  Triangle t (a, b, c);
+  Triangle t(a, b, c);
 
   std::cout << Triangle::getArea(a, b, c) << " " << Triangle::getArea(a, b, p) << std::endl;
   std::cout << Triangle::getArea(a, p, c) << " " << Triangle::getArea(p, b, c) << std::endl;
