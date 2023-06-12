@@ -11,9 +11,9 @@ Ymael can render `.obj` models using ASCII characters in your terminal. The goal
 
 https://user-images.githubusercontent.com/45083086/151687762-72f1e20a-1192-4beb-b869-2c205dce14fc.mov
 
-https://user-images.githubusercontent.com/45083086/151687478-2f42f798-15b4-4487-bf64-7611df25459e.mp4
+<!-- https://user-images.githubusercontent.com/45083086/151687478-2f42f798-15b4-4487-bf64-7611df25459e.mp4
 
 https://user-images.githubusercontent.com/45083086/151687476-32674d10-924a-443a-9010-f63b47fd9dd1.mov
-
+ -->
 
 
